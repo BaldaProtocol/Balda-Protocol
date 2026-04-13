@@ -1,6 +1,10 @@
 # Balda Protocol — Technical README
 
-[![Website](https://img.shields.io/badge/Website-Live-brightgreen)](https://baldaprotocol.github.io/Balda-Protocol/) [![Italian README](https://img.shields.io/badge/README-Italiano-blue)](./README_IT.md)
+<div align="center">
+
+[![Website](https://img.shields.io/badge/🌐%20Website-Live-brightgreen?style=for-the-badge)](https://baldaprotocol.github.io/Balda-Protocol/) [![Italian README](https://img.shields.io/badge/🇮🇹%20README-Italiano-blue?style=for-the-badge)](./README_IT.md)
+
+</div>
 
 > **Author:** Deaf Italian · *Concept & Decision by Deaf Italian only. Built with AI.*
 > **License:** MIT · **Solidity:** ^0.8.20 · **Dependencies:** OpenZeppelin
