@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="description" content="Balda Protocol — BLD ERC-20 token. 91,000 BLD fixed supply. Ownerless. Immutable.">
+<meta name="theme-color" content="#050508">
+<title>Balda Protocol — BLD Token</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#050508;
+  --bg2:#0a0a12;
+  --bg3:#0f0f1a;
+  --border:rgba(255,255,255,.07);
+  --border2:rgba(255,255,255,.12);
+  --v1:#7c3aed;--v2:#4f46e5;--b1:#2563eb;--b2:#0ea5e9;
+  --gold:#c9a96e;--gold2:#a07840;
+  --text:#f0f0ff;--silver:#9094b0;--muted:#4a4a6a;
+  --green:#22d3a5;--fp:#f43f6e;--c1:#38bdf8;
+  --gv:linear-gradient(135deg,var(--v1),var(--b1),var(--b2));
+  --gg:linear-gradient(135deg,var(--gold2),var(--gold));
+  --gvg:linear-gradient(135deg,var(--v1),var(--b1),var(--gold));
+  --glow-v:rgba(124,58,237,.25);
+  --glow-b:rgba(37,99,235,.2);
+  --glow-g:rgba(201,169,110,.15);
+  --fm:'Inter','Helvetica Neue',Arial,sans-serif;
+  --fd:'Bebas Neue',impact,sans-serif;
+  --nh:64px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--fm);font-size:14px;line-height:1.8;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+ul{list-style:none}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--v1)}
+
+/* ── MESH BACKGROUND ── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 20%,rgba(124,58,237,.12),transparent),
+    radial-gradient(ellipse 60% 40% at 80% 60%,rgba(37,99,235,.1),transparent),
+    radial-gradient(ellipse 50% 60% at 50% 100%,rgba(201,169,110,.06),transparent);
+}
+#bgc{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.2}
+
+/* ── NAV ── */
+#nav{
+  position:fixed;top:0;left:0;right:0;height:var(--nh);z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(16px,4vw,52px);
+  background:rgba(5,5,8,.8);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+  transition:transform .3s;
+}
+#nav-center{position:absolute;left:50%;transform:translateX(-50%);}
+.nlg{display:flex;align-items:center;gap:10px;font-family:var(--fd);font-size:clamp(17px,2.8vw,21px);letter-spacing:.08em;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nlm{
+  width:34px;height:34px;border-radius:8px;
+  background:linear-gradient(135deg,var(--v1),var(--b1));
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-family:var(--fd);color:#fff;flex-shrink:0;
+  box-shadow:0 0 16px var(--glow-v);
+}
+.nll{display:flex;align-items:center;gap:clamp(14px,2.5vw,28px)}
+.nll a{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--silver);transition:color .2s;white-space:nowrap}
+.nll a:hover{color:var(--text)}
+.nll .nb{
+  background:linear-gradient(135deg,var(--v1),var(--b1));
+  color:#fff;padding:8px 18px;border-radius:6px;font-size:11px;
+  font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  box-shadow:0 0 20px var(--glow-v);transition:opacity .2s,transform .15s;
+}
+.nll .nb:hover{opacity:.85;transform:translateY(-1px)}
+.nbg{display:none;flex-direction:column;gap:5px;padding:6px}
+.nbg span{display:block;width:22px;height:2px;background:var(--gold)}
+#mm{display:none;position:fixed;top:var(--nh);left:0;right:0;background:rgba(5,5,8,.97);border-bottom:1px solid var(--border);z-index:199;padding:20px clamp(16px,5vw,52px);flex-direction:column}
+#mm.open{display:flex}
+#mm a{padding:13px 0;font-size:13px;letter-spacing:.07em;text-transform:uppercase;color:var(--silver);border-bottom:1px solid var(--border);transition:color .2s}
+#mm a:last-child{border-bottom:none}
+#mm a:hover{color:var(--text)}
+
+/* ── LAYOUT ── */
+.wp{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 clamp(16px,5vw,52px)}
+section{padding:clamp(64px,10vw,120px) 0}
+
+/* ── DIVIDER ── */
+.dvd{height:1px;background:linear-gradient(90deg,transparent,var(--v1) 30%,var(--b1) 70%,transparent);opacity:.3}
+
+/* ── TYPE ── */
+.lbl{display:flex;align-items:center;gap:10px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:14px}
+.lbl-dot{width:6px;height:6px;border-radius:50%;background:var(--gv);flex-shrink:0}
+.lbl span{background:var(--gv);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.h1{font-family:var(--fd);font-size:clamp(52px,9vw,100px);line-height:.92;letter-spacing:.02em;margin-bottom:10px}
+.h1 .gtext{background:var(--gvg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.h2{font-family:var(--fd);font-size:clamp(30px,5vw,52px);line-height:1;letter-spacing:.04em;margin-bottom:12px}
+.h2 .gtext{background:var(--gv);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.intro{font-size:clamp(14px,1.8vw,16px);color:var(--silver);max-width:540px;line-height:1.85;margin-bottom:clamp(28px,4vw,48px);font-weight:300}
+
+/* ── BUTTONS ── */
+.bp{
+  display:inline-block;
+  background:linear-gradient(135deg,var(--v1),var(--b1));
+  color:#fff;padding:13px 28px;
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+  border-radius:6px;box-shadow:0 0 24px var(--glow-v);
+  transition:opacity .2s,transform .15s,box-shadow .2s;
+}
+.bp:hover{opacity:.88;transform:translateY(-2px);box-shadow:0 0 36px var(--glow-v)}
+.bo{
+  display:inline-block;
+  border:1px solid var(--border2);color:var(--silver);
+  padding:13px 28px;border-radius:6px;
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  transition:border-color .2s,color .2s,background .2s;
+  backdrop-filter:blur(8px);
+}
+.bo:hover{border-color:rgba(124,58,237,.6);color:var(--text);background:rgba(124,58,237,.08)}
+
+/* ── BADGE ── */
+.bdg{
+  display:inline-block;padding:4px 10px;
+  border:1px solid var(--border2);border-radius:4px;
+  font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--silver);margin:0 4px 4px 0;
+  background:rgba(255,255,255,.03);
+  backdrop-filter:blur(4px);
+}
+.bdg.g{border-color:rgba(201,169,110,.3);color:var(--gold);background:rgba(201,169,110,.05)}
+
+/* ── GLASS CARD ── */
+.gcard{
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--border);
+  border-radius:12px;
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  position:relative;overflow:hidden;
+}
+.gcard::before{
+  content:'';position:absolute;inset:0;border-radius:12px;
+  background:linear-gradient(135deg,rgba(124,58,237,.06),rgba(37,99,235,.04),transparent);
+  pointer-events:none;
+}
+/* glow card variants */
+.gcard.gv::after{content:'';position:absolute;top:-40px;left:-40px;width:180px;height:180px;background:radial-gradient(circle,var(--glow-v),transparent 70%);pointer-events:none}
+.gcard.gb::after{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:radial-gradient(circle,var(--glow-b),transparent 70%);pointer-events:none}
+.gcard.gg::after{content:'';position:absolute;bottom:-40px;left:-40px;width:180px;height:180px;background:radial-gradient(circle,var(--glow-g),transparent 70%);pointer-events:none}
+
+/* Stat card */
+.scard{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:18px 20px;position:relative;overflow:hidden;transition:border-color .25s,transform .25s}
+.scard:hover{border-color:rgba(124,58,237,.4);transform:translateY(-2px)}
+.scard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gv);border-radius:2px 2px 0 0;opacity:.7}
+.sl{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.sv{font-family:var(--fd);font-size:clamp(16px,2.5vw,20px);letter-spacing:.05em}
+.sv small{font-family:var(--fm);font-size:11px;margin-left:3px;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ── TABLE ── */
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:280px}
+th{padding:10px 14px;background:rgba(124,58,237,.1);color:var(--silver);font-size:9px;letter-spacing:.2em;text-transform:uppercase;text-align:left;white-space:nowrap;border-bottom:1px solid var(--border)}
+td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--silver);vertical-align:top}
+tr:hover td{background:rgba(255,255,255,.03)}
+td:first-child{color:var(--text);white-space:nowrap}
+td code{font-family:monospace;font-size:11px;color:var(--c1)}
+
+/* ── CALLOUT ── */
+.cl{background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.2);border-left:3px solid var(--v1);border-radius:0 8px 8px 0;padding:16px 20px;font-size:13px;color:var(--silver);line-height:1.85}
+.cl strong{color:var(--text)}
+.cl code{color:var(--c1);font-size:12px}
+
+/* ── FADE ── */
+.fd{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease}
+.fd.in{opacity:1;transform:none}
+.fd.d1{transition-delay:.1s}.fd.d2{transition-delay:.2s}
+
+/* ── HERO ── */
+#hero{min-height:100vh;padding-top:calc(var(--nh) + 28px);display:flex;align-items:center;position:relative;overflow:hidden}
+.hi{display:grid;grid-template-columns:1fr auto;gap:clamp(32px,5vw,80px);align-items:center;width:100%;padding:clamp(40px,6vw,80px) 0}
+.hey{display:flex;align-items:center;gap:10px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--silver);margin-bottom:18px}
+.hey-line{width:24px;height:1px;background:var(--gv);flex-shrink:0}
+.hsub{font-size:clamp(14px,1.9vw,17px);color:var(--silver);margin-bottom:34px;line-height:1.75;max-width:460px;font-weight:300}
+.hst{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:34px;max-width:440px}
+.hac{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:30px}
+.hbg{display:flex;flex-wrap:wrap}
+
+/* Orbit */
+.hv{display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ow{position:relative;width:clamp(200px,22vw,300px);height:clamp(200px,22vw,300px)}
+.or{position:absolute;inset:0;border-radius:50%;border:1px solid;animation:spin linear infinite}
+.or.o1{border-color:rgba(124,58,237,.25);animation-duration:28s}
+.or.o2{inset:14%;border-color:rgba(37,99,235,.3);animation-duration:18s;animation-direction:reverse}
+.or.o3{inset:28%;border-color:rgba(201,169,110,.35);border-style:dashed;animation-duration:12s}
+@keyframes spin{to{transform:rotate(360deg)}}
+.oc{
+  position:absolute;inset:26%;border-radius:50%;
+  background:rgba(10,10,18,.9);
+  border:2px solid transparent;
+  background-clip:padding-box;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:0 0 40px var(--glow-v),0 0 80px rgba(37,99,235,.15),inset 0 0 30px rgba(124,58,237,.08);
+}
+.oc-ring{position:absolute;inset:-2px;border-radius:50%;background:linear-gradient(135deg,var(--v1),var(--b1),var(--gold));z-index:-1}
+.ob{font-family:var(--fd);font-size:clamp(20px,3.5vw,34px);letter-spacing:.05em;line-height:1;background:var(--gvg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.os{font-size:8px;letter-spacing:.2em;color:var(--silver);text-transform:uppercase;margin-top:3px}
+
+/* ── SUPPLY ── */
+.sg{display:grid;grid-template-columns:auto 1fr;gap:clamp(28px,5vw,64px);align-items:center}
+.dw{position:relative;width:clamp(180px,26vw,240px);height:clamp(180px,26vw,240px)}
+.dw svg{width:100%;height:100%}
+.dc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.dn{font-family:var(--fd);font-size:clamp(22px,4vw,30px);letter-spacing:.05em;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ds{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+.si{display:flex;flex-direction:column;gap:8px}
+.sit{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:0 8px 8px 0;padding:14px 16px;transition:border-left-color .2s,background .2s}
+.sit:hover{background:rgba(255,255,255,.05)}
+.sit.s1{border-left-color:var(--c1)}.sit.s2{border-left-color:var(--gold2)}.sit.s3{border-left-color:#22d3a5}.sit.s4{border-left-color:var(--v1)}
+.sd{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.si2{flex:1}.sn{font-size:13px;margin-bottom:2px}.sx{font-size:11px;color:var(--muted)}
+.sp{font-family:var(--fd);font-size:clamp(15px,2vw,19px);letter-spacing:.05em;flex-shrink:0}
+
+/* ── RULES ── */
+.rg{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-bottom:clamp(36px,5vw,52px)}
+.rc{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:clamp(16px,2.5vw,24px);position:relative;overflow:hidden;transition:border-color .25s,background .25s}
+.rc:hover{border-color:rgba(124,58,237,.3);background:rgba(124,58,237,.05)}
+.rc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--v1),var(--b1));opacity:.5;border-radius:2px 2px 0 0}
+.rn{font-family:var(--fd);font-size:clamp(36px,5vw,52px);line-height:1;color:rgba(124,58,237,.2);margin-bottom:4px}
+.rt{font-family:var(--fd);font-size:clamp(13px,1.8vw,16px);letter-spacing:.05em;margin-bottom:8px;background:var(--gv);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.rx{font-size:13px;color:var(--silver);line-height:1.8}
+.rx code{color:var(--c1);font-size:12px}
+
+/* ── TABS ── */
+.pt{display:flex;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;margin-bottom:20px;overflow-x:auto;scrollbar-width:none;padding:4px}
+.pt::-webkit-scrollbar{display:none}
+.tb{flex:1;min-width:max-content;padding:10px 16px;font-family:var(--fm);font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-radius:7px;background:transparent;transition:color .2s,background .2s;white-space:nowrap}
+.tb:hover{color:var(--text)}
+.tb.a{color:#fff;background:linear-gradient(135deg,var(--v1),var(--b1));box-shadow:0 0 16px var(--glow-v)}
+.tb.a.fp-tab{background:linear-gradient(135deg,#9f1239,var(--fp));box-shadow:0 0 16px rgba(244,63,110,.3)}
+.pp{display:none}.pp.a{display:block}
+
+/* ── PERIOD CARDS ── */
+.pg{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-top:16px}
+.pc{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:clamp(12px,2vw,18px);position:relative;overflow:hidden;transition:border-color .2s,background .2s}
+.pc:hover{border-color:rgba(124,58,237,.3);background:rgba(124,58,237,.05)}
+.pc::after{content:attr(data-n);position:absolute;top:6px;right:10px;font-family:var(--fd);font-size:38px;line-height:1;color:rgba(255,255,255,.04);pointer-events:none}
+.pcl{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.pcp{font-family:var(--fd);font-size:clamp(13px,2vw,17px);letter-spacing:.03em;margin-bottom:2px;background:var(--gv);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.pcu{font-size:9px;color:var(--muted);margin-bottom:10px}
+.pcr{display:flex;flex-direction:column;gap:3px}
+.pcrw{display:flex;justify-content:space-between;gap:6px;font-size:10px;color:var(--muted);flex-wrap:nowrap}
+.pcrv{color:var(--silver);text-align:right;white-space:nowrap;flex-shrink:0}
+
+.period-live-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(34,211,165,.12);
+  border:1px solid rgba(34,211,165,.4);
+  border-radius:4px;padding:3px 8px;
+  font-size:9px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--green);margin-top:8px;
+}
+.period-live-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--green);
+  animation:blink 1.4s ease-in-out infinite;
+  flex-shrink:0;
+}
+.pc.active-period{
+  border-color:rgba(34,211,165,.5) !important;
+  background:rgba(34,211,165,.05) !important;
+  box-shadow:0 0 20px rgba(34,211,165,.15);
+}
+.vtg{display:inline-block;margin-top:8px;padding:3px 8px;border:1px solid rgba(56,189,248,.3);background:rgba(56,189,248,.07);color:var(--c1);font-size:9px;letter-spacing:.08em;text-transform:uppercase;border-radius:4px;white-space:nowrap}
+.dtg{display:inline-block;margin-top:8px;padding:3px 8px;border:1px solid rgba(244,63,110,.3);background:rgba(244,63,110,.07);color:var(--fp);font-size:9px;letter-spacing:.08em;text-transform:uppercase;border-radius:4px;white-space:nowrap}
+
+/* WAIT / FINAL */
+.wb{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:clamp(24px,5vw,56px);text-align:center;margin-top:16px}
+.wn{font-family:var(--fd);font-size:clamp(44px,9vw,88px);line-height:1;margin-bottom:10px;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.fpb{background:rgba(244,63,110,.05);border:1px solid rgba(244,63,110,.2);border-radius:12px;padding:clamp(24px,5vw,56px);text-align:center;margin-top:16px;position:relative;overflow:hidden}
+.fpb::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(244,63,110,.08),transparent 70%);pointer-events:none}
+.fpt{font-family:var(--fd);font-size:clamp(32px,6vw,60px);margin-bottom:8px;color:var(--fp)}
+.fps{font-size:clamp(13px,1.8vw,16px);color:var(--silver);margin-bottom:16px;font-weight:300}
+.fpp{display:inline-block;padding:10px 22px;border:1px solid rgba(244,63,110,.3);border-radius:8px;font-size:clamp(13px,1.8vw,16px);color:var(--fp);background:rgba(244,63,110,.06)}
+.fpn{margin-top:10px;font-size:11px;color:var(--muted)}
+
+/* MOBILE PRIZE CARDS */
+.prize-cards{display:none}
+.prize-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:0 8px 8px 0;padding:10px 13px;margin-bottom:3px;display:flex;align-items:center;gap:10px}
+.prize-card.c1{border-left-color:var(--c1)}.prize-card.c2{border-left-color:var(--gold2)}.prize-card.fp{border-left-color:var(--fp)}
+.prz-lft{flex-shrink:0;min-width:26px;font-family:var(--fd);font-size:17px;color:var(--muted)}
+.prz-mid{flex:1;min-width:0}
+.prz-phase{font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1px;color:var(--muted)}
+.prz-prize{font-size:12px;color:var(--text);word-break:break-all;margin-bottom:1px}
+.prz-formula{font-size:10px;color:var(--muted)}
+
+/* ── TRADE ── */
+.tpb{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px}
+.tph{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border)}
+.tpt{font-family:var(--fd);font-size:15px;letter-spacing:.05em}
+.lb{display:flex;align-items:center;gap:6px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--green)}
+.ld{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.4s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.df{width:100%;height:380px;border:none;display:block}
+.dpx{height:240px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center}
+.dpx p{font-size:13px;color:var(--muted)}
+.tls{display:flex;gap:12px;flex-wrap:wrap}
+
+/* ── WALLET MODAL ── */
+.wm{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px}
+.wmd{background:var(--bg2);border:1px solid rgba(124,58,237,.3);border-radius:16px;max-width:360px;width:100%;position:relative;box-shadow:0 0 60px var(--glow-v)}
+.wmh{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border)}
+.wml{padding:10px;display:flex;flex-direction:column;gap:4px;max-height:320px;overflow-y:auto}
+.wmf{padding:10px 18px;border-top:1px solid var(--border);font-size:10px;color:var(--muted);text-align:center;border-radius:0 0 16px 16px}
+
+/* ── CLAIM ── */
+.cbr{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:20px}
+
+/* ── FOUNDER VAULT ── */
+.fv-bar-wrap{background:rgba(255,255,255,.06);height:6px;border-radius:99px;margin-bottom:10px;overflow:hidden}
+#fv-bar{height:100%;background:linear-gradient(90deg,var(--v1),var(--b1),var(--gold));width:0%;transition:width .8s ease;border-radius:99px}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:clamp(36px,6vw,60px) 0;position:relative;z-index:1}
+footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--v1) 30%,var(--b1) 70%,transparent)}
+.fg{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:clamp(24px,4vw,48px);margin-bottom:clamp(28px,4vw,40px)}
+.fbl{font-family:var(--fd);font-size:clamp(18px,3vw,24px);letter-spacing:.08em;margin-bottom:10px;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.fbp{font-size:13px;color:var(--muted);line-height:1.75;max-width:240px}
+.fc h4{font-family:var(--fd);font-size:14px;letter-spacing:.1em;color:var(--text);margin-bottom:12px}
+.fc li{margin-bottom:7px}
+.fc a{font-size:13px;color:var(--muted);transition:color .2s}
+.fc a:hover{color:var(--text)}
+.fb2{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding-top:18px;border-top:1px solid var(--border)}
+.fb2 p{font-size:11px;color:var(--muted)}
+.fsig{font-style:italic;font-size:12px;color:var(--gold2)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  #price-bar{display:flex !important}
+  #hero{padding-top:calc(var(--nh) + 28px)}
+  #nav-price{display:none !important}
+  #nav-center{display:none !important}
+  .nll{display:none}.nbg{display:flex}
+  .hi{grid-template-columns:1fr}.hv{display:none}
+  .sg{grid-template-columns:1fr}
+  .rg{grid-template-columns:1fr 1fr}
+  .pg{grid-template-columns:repeat(2,1fr)}
+  .fg{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .prize-table-wrap{display:none}.prize-cards{display:block}
+  .rg{grid-template-columns:1fr}
+  .pg{grid-template-columns:1fr 1fr}
+  #period-info-grid,#fv-grid{grid-template-columns:1fr 1fr !important}
+  .pcp{font-size:13px !important}
+  .pcl,.pcu{font-size:8px}
+  .pcrw{font-size:9px}
+}
+@media(max-width:420px){
+  .pg{grid-template-columns:1fr}
+  .fb2{flex-direction:column;text-align:center}
+}
+@media(prefers-reduced-motion:reduce){.or{animation:none}.fd{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+<canvas id="bgc" aria-hidden="true"></canvas>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nlg" aria-label="Balda Protocol">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="32" height="32" aria-hidden="true">
+  <circle cx="256" cy="256" r="256" fill="#120820"/>
+  <circle cx="256" cy="256" r="230" fill="#1a0a2e"/>
+  <circle cx="256" cy="256" r="10" fill="#9B6FFF"/>
+  <path d="M 256 206 A 50 50 0 0 1 256 306" fill="none" stroke="#9B6FFF" stroke-width="14" stroke-linecap="round"/>
+  <path d="M 256 206 A 50 50 0 0 0 256 306" fill="none" stroke="#9B6FFF" stroke-width="14" stroke-linecap="round"/>
+  <path d="M 256 178 A 78 78 0 0 1 256 334" fill="none" stroke="#8B5FEF" stroke-width="11" stroke-linecap="round" opacity=".9"/>
+  <path d="M 256 178 A 78 78 0 0 0 256 334" fill="none" stroke="#8B5FEF" stroke-width="11" stroke-linecap="round" opacity=".9"/>
+  <path d="M 256 150 A 106 106 0 0 1 256 362" fill="none" stroke="#7B4FDF" stroke-width="9" stroke-linecap="round" opacity=".78"/>
+  <path d="M 256 150 A 106 106 0 0 0 256 362" fill="none" stroke="#7B4FDF" stroke-width="9" stroke-linecap="round" opacity=".78"/>
+  <path d="M 256 122 A 134 134 0 0 1 256 390" fill="none" stroke="#6C3CE1" stroke-width="7.5" stroke-linecap="round" opacity=".64"/>
+  <path d="M 256 122 A 134 134 0 0 0 256 390" fill="none" stroke="#6C3CE1" stroke-width="7.5" stroke-linecap="round" opacity=".64"/>
+  <path d="M 256 96 A 160 160 0 0 1 256 416" fill="none" stroke="#5C2CC1" stroke-width="6" stroke-linecap="round" opacity=".48"/>
+  <path d="M 256 96 A 160 160 0 0 0 256 416" fill="none" stroke="#5C2CC1" stroke-width="6" stroke-linecap="round" opacity=".48"/>
+  <path d="M 256 72 A 184 184 0 0 1 256 440" fill="none" stroke="#4C1CA1" stroke-width="4.5" stroke-linecap="round" opacity=".32"/>
+  <path d="M 256 72 A 184 184 0 0 0 256 440" fill="none" stroke="#4C1CA1" stroke-width="4.5" stroke-linecap="round" opacity=".32"/>
+  <path d="M 256 50 A 206 206 0 0 1 256 462" fill="none" stroke="#3C0C81" stroke-width="3" stroke-linecap="round" opacity=".18"/>
+  <path d="M 256 50 A 206 206 0 0 0 256 462" fill="none" stroke="#3C0C81" stroke-width="3" stroke-linecap="round" opacity=".18"/>
+  <circle cx="256" cy="256" r="245" fill="none" stroke="#6C3CE1" stroke-width="1.5" opacity=".25"/>
+  <circle cx="256" cy="256" r="22" fill="#6C3CE1" opacity=".15"/>
+  <circle cx="256" cy="256" r="10" fill="#C4A0FF" opacity=".9"/>
+  <circle cx="256" cy="256" r="5" fill="#ffffff" opacity=".8"/>
+</svg>Balda Protocol
+  </a>
+  <div class="nll">
+    <a href="#supply">Supply</a>
+    <a href="#airdrop">Airdrop</a>
+    <a href="#trade">Trade</a>
+  <div id="nav-center">
+    <div id="nav-price" style="display:flex;align-items:center;gap:6px;font-size:11px;letter-spacing:.05em;color:var(--silver);background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:20px;padding:4px 12px">
+      <span style="width:5px;height:5px;border-radius:50%;background:var(--muted);flex-shrink:0" id="nav-price-dot"></span>
+      <span id="nav-price-val">BLD —</span>
+      <span id="nav-price-chg" style="font-size:10px"></span>
+    </div>
+  </div>
+    <a href="#claim" class="nb">Claim BLD</a>
+  </div>
+  <button class="nbg" id="bgbtn" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- PRICE BAR -->
+<div id="price-bar" style="position:fixed;top:var(--nh);left:0;right:0;z-index:199;height:28px;background:rgba(5,5,8,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:none;align-items:center;justify-content:center;gap:clamp(12px,3vw,32px);font-size:11px;letter-spacing:.06em;transition:transform .3s">
+  <div style="display:flex;align-items:center;gap:6px">
+    <span style="width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 1.4s ease-in-out infinite;flex-shrink:0" id="pb-dot"></span>
+    <span style="color:var(--muted);text-transform:uppercase;font-size:9px">BLD</span>
+    <span id="pb-price" style="color:var(--text);font-weight:600">—</span>
+    <span id="pb-chg" style="font-size:10px">—</span>
+  </div>
+  <div style="width:1px;height:12px;background:var(--border)"></div>
+  <div style="display:flex;align-items:center;gap:5px;color:var(--muted)">
+    <span style="font-size:9px;text-transform:uppercase">Vol 24h</span>
+    <span id="pb-vol" style="color:var(--silver)">—</span>
+  </div>
+  <div style="width:1px;height:12px;background:var(--border)"></div>
+  <div style="display:flex;align-items:center;gap:5px;color:var(--muted)">
+    <span style="font-size:9px;text-transform:uppercase">Liq</span>
+    <span id="pb-liq" style="color:var(--silver)">🔒 <span id="pb-liq-val">—</span></span>
+  </div>
+</div>
+
+<div id="mm" style="top:calc(var(--nh) + 28px)">
+  <a href="#supply"        onclick="cMM()">Supply</a>
+  <a href="#airdrop"       onclick="cMM()">Airdrop</a>
+  <a href="#trade"         onclick="cMM()">Trade</a>
+  <a href="#claim"         onclick="cMM()">Claim BLD</a>
+  <a href="#founder-vault" onclick="cMM()">Founder Vault</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+<div class="wp">
+<div class="hi">
+  <div>
+    <div class="hey"><div class="hey-line"></div>Ethereum Mainnet · ERC-20 · MIT</div>
+    <h1 class="h1">Balda<br><span class="gtext">Protocol</span></h1>
+    <p class="hsub">A pure, ownerless token. 91,000 BLD fixed forever. Autonomous airdrop running on <em>block.timestamp</em> alone.</p>
+    <div class="hst">
+      <div class="scard"><div class="sl">Total Supply</div><div class="sv">91,000 <small>BLD</small></div></div>
+      <div class="scard"><div class="sl">Standard</div><div class="sv">ERC-20</div></div>
+      <div class="scard"><div class="sl">Decimals</div><div class="sv">18</div></div>
+      <div class="scard"><div class="sl">Owner</div><div class="sv" style="font-size:15px;color:var(--fp)">None</div></div>
+    </div>
+    <div class="hac">
+      <a href="#airdrop" class="bp">Explore Airdrop</a>
+      <a href="#" class="bo" style="opacity:.5;cursor:default">GitHub — Coming Soon</a>
+    </div>
+    <div class="hbg">
+      <span class="bdg g">No Mint</span><span class="bdg g">No Burn</span><span class="bdg g">No Pause</span>
+      <span class="bdg g">No Blacklist</span><span class="bdg g">No Tax</span><span class="bdg g">No Admin</span><span class="bdg g">No Proxy</span>
+    </div>
+  </div>
+  <div class="hv" aria-hidden="true">
+    <div class="ow">
+      <div class="or o1"></div><div class="or o2"></div><div class="or o3"></div>
+      <div class="oc">
+        <div class="oc-ring"></div>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:62%;height:62%;border-radius:50%" aria-label="Balda Protocol">
+          <circle cx="256" cy="256" r="256" fill="#120820"/>
+          <circle cx="256" cy="256" r="230" fill="#1a0a2e"/>
+          <circle cx="256" cy="256" r="10" fill="#9B6FFF"/>
+          <path d="M 256 206 A 50 50 0 0 1 256 306" fill="none" stroke="#9B6FFF" stroke-width="14" stroke-linecap="round"/>
+          <path d="M 256 206 A 50 50 0 0 0 256 306" fill="none" stroke="#9B6FFF" stroke-width="14" stroke-linecap="round"/>
+          <path d="M 256 178 A 78 78 0 0 1 256 334" fill="none" stroke="#8B5FEF" stroke-width="11" stroke-linecap="round" opacity=".9"/>
+          <path d="M 256 178 A 78 78 0 0 0 256 334" fill="none" stroke="#8B5FEF" stroke-width="11" stroke-linecap="round" opacity=".9"/>
+          <path d="M 256 150 A 106 106 0 0 1 256 362" fill="none" stroke="#7B4FDF" stroke-width="9" stroke-linecap="round" opacity=".78"/>
+          <path d="M 256 150 A 106 106 0 0 0 256 362" fill="none" stroke="#7B4FDF" stroke-width="9" stroke-linecap="round" opacity=".78"/>
+          <path d="M 256 122 A 134 134 0 0 1 256 390" fill="none" stroke="#6C3CE1" stroke-width="7.5" stroke-linecap="round" opacity=".64"/>
+          <path d="M 256 122 A 134 134 0 0 0 256 390" fill="none" stroke="#6C3CE1" stroke-width="7.5" stroke-linecap="round" opacity=".64"/>
+          <path d="M 256 96 A 160 160 0 0 1 256 416" fill="none" stroke="#5C2CC1" stroke-width="6" stroke-linecap="round" opacity=".48"/>
+          <path d="M 256 96 A 160 160 0 0 0 256 416" fill="none" stroke="#5C2CC1" stroke-width="6" stroke-linecap="round" opacity=".48"/>
+          <path d="M 256 72 A 184 184 0 0 1 256 440" fill="none" stroke="#4C1CA1" stroke-width="4.5" stroke-linecap="round" opacity=".32"/>
+          <path d="M 256 72 A 184 184 0 0 0 256 440" fill="none" stroke="#4C1CA1" stroke-width="4.5" stroke-linecap="round" opacity=".32"/>
+          <path d="M 256 50 A 206 206 0 0 1 256 462" fill="none" stroke="#3C0C81" stroke-width="3" stroke-linecap="round" opacity=".18"/>
+          <path d="M 256 50 A 206 206 0 0 0 256 462" fill="none" stroke="#3C0C81" stroke-width="3" stroke-linecap="round" opacity=".18"/>
+          <circle cx="256" cy="256" r="245" fill="none" stroke="#6C3CE1" stroke-width="1.5" opacity=".25"/>
+          <circle cx="256" cy="256" r="22" fill="#6C3CE1" opacity=".15"/>
+          <circle cx="256" cy="256" r="10" fill="#C4A0FF" opacity=".9"/>
+          <circle cx="256" cy="256" r="5" fill="#fff" opacity=".8"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</section>
+<div class="dvd"></div>
+
+<!-- SUPPLY -->
+<section id="supply">
+<div class="wp">
+  <div class="lbl"><div class="lbl-dot"></div><span>Token Distribution</span></div>
+  <h2 class="h2">Supply <span class="gtext">Distribution</span></h2>
+  <p class="intro">91,000 BLD minted once in the constructor. An on-chain assert guarantees the total — if off by even one wei, the deploy reverts.</p>
+  <div class="sg">
+    <div class="fd">
+      <div class="dw">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#38bdf8" stroke-width="24" stroke-dasharray="386.6 116.1" stroke-dashoffset="0" transform="rotate(-90 100 100)" opacity=".9"/>
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#c9a96e" stroke-width="24" stroke-dasharray="55.2 447.5" stroke-dashoffset="-386.6" transform="rotate(-90 100 100)" opacity=".9"/>
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#22d3a5" stroke-width="24" stroke-dasharray="33.1 469.6" stroke-dashoffset="-441.8" transform="rotate(-90 100 100)" opacity=".9"/>
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#7c3aed" stroke-width="24" stroke-dasharray="27.6 475.1" stroke-dashoffset="-474.9" transform="rotate(-90 100 100)" opacity=".9"/>
+          <circle cx="100" cy="100" r="67" fill="var(--bg2)"/>
+        </svg>
+        <div class="dc"><div class="dn">91K</div><div class="ds">BLD Total</div></div>
+      </div>
+    </div>
+    <div class="si fd d2">
+      <div class="sit s1">
+        <div class="sd" style="background:#38bdf8;box-shadow:0 0 8px rgba(56,189,248,.5)"></div>
+        <div class="si2"><div class="sn">BaldaAirdrop</div><div class="sx">70,000 BLD — Community airdrop</div></div>
+        <div class="sp" style="color:var(--c1)">76.92%</div>
+      </div>
+      <div class="sit s2">
+        <div class="sd" style="background:var(--gold);box-shadow:0 0 8px rgba(201,169,110,.5)"></div>
+        <div class="si2"><div class="sn">VaultCreator</div><div class="sx">10,000 BLD — Founder vesting</div></div>
+        <div class="sp" style="color:var(--gold)">10.99%</div>
+      </div>
+      <div class="sit s3">
+        <div class="sd" style="background:#22d3a5;box-shadow:0 0 8px rgba(34,211,165,.5)"></div>
+        <div class="si2"><div class="sn">BaldaReserve</div><div class="sx">6,000 BLD — Locked forever</div></div>
+        <div class="sp" style="color:#22d3a5">6.59%</div>
+      </div>
+      <div class="sit s4">
+        <div class="sd" style="background:var(--v1);box-shadow:0 0 8px var(--glow-v)"></div>
+        <div class="si2"><div class="sn">Deployer Wallet</div><div class="sx">5,000 BLD — DEX liquidity</div></div>
+        <div class="sp" style="color:var(--v1)">5.49%</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<div class="dvd"></div>
+
+<!-- AIRDROP -->
+<section id="airdrop">
+<div class="wp">
+  <div class="lbl"><div class="lbl-dot"></div><span>BaldaAirdrop.sol</span></div>
+  <h2 class="h2">Airdrop <span class="gtext">System</span></h2>
+  <p class="intro">70,000 BLD across 3 phases. No owner, no admin, no keeper. Runs on <em>block.timestamp</em> alone.</p>
+
+  <div class="rg fd">
+    <div class="rc"><div class="rn">01</div><div class="rt">One Wallet, One Claim</div><div class="rx">Each wallet claims exactly once for the entire contract lifetime. Permanent, no exceptions.</div></div>
+    <div class="rc"><div class="rn">02</div><div class="rt">180-Day Vesting</div><div class="rx">Cycle 1 only. Vesting starts from period start. Matured portion transfers at claim, rest via <code>withdrawVesting()</code>.</div></div>
+    <div class="rc"><div class="rn">03</div><div class="rt">Rollover</div><div class="rx">Unclaimed tokens roll to the next period. Cycle 1 remainders carry into Cycle 2. Nothing is lost.</div></div>
+    <div class="rc"><div class="rn">04</div><div class="rt">Dust Rule</div><div class="rx">Active on C2-P5 and Final Phase only. Last claimer receives all remaining tokens and contract closes.</div></div>
+    <div class="rc"><div class="rn">05</div><div class="rt">Auto Closure</div><div class="rx">Contract closes when Dust Rule triggers. After <code>currentPhase == 3</code> every call reverts.</div></div>
+    <div class="rc"><div class="rn">06</div><div class="rt">Permissionless</div><div class="rx"><code>claim()</code>, <code>withdrawVesting()</code>, <code>finalizePeriod()</code>, <code>startCycle2()</code> — callable by anyone.</div></div>
+  </div>
+
+  <div class="pt" role="tablist">
+    <button class="tb a" onclick="sTab('c1',this)">Cycle 1 · 396 days</button>
+    <button class="tb"   onclick="sTab('wt',this)">Wait · 11 Years</button>
+    <button class="tb"   onclick="sTab('c2',this)">Cycle 2 · 165 days</button>
+    <button class="tb fp-tab" onclick="sTab('fp',this)">Final Phase · ∞</button>
+  </div>
+
+  <div class="pp a" id="pp-c1">
+    <div class="pg">
+      <div class="pc" data-n="1"><div class="pcl">C1 · P1</div><div class="pcp">111.0 BLD</div><div class="pcu">111 / 2⁰</div><div class="pcr"><div class="pcrw"><span>Alloc</span><span class="pcrv">10,101.0</span></div><div class="pcrw"><span>Days</span><span class="pcrv">11</span></div><div class="pcrw"><span>Max</span><span class="pcrv" style="color:var(--gold)">91</span></div></div><div class="vtg">Vesting 180d</div></div>
+      <div class="pc" data-n="2"><div class="pcl">C1 · P2</div><div class="pcp">55.5 BLD</div><div class="pcu">111 / 2¹</div><div class="pcr"><div class="pcrw"><span>Alloc</span><span class="pcrv">1,424.96</span></div><div class="pcrw"><span>Days</span><span class="pcrv">22</span></div><div class="pcrw"><span>Max</span><span class="pcrv">∞</span></div></div><div class="vtg">Vesting 180d</div></div>
+      <div class="pc" data-n="3"><div class="pcl">C1 · P3</div><div class="pcp">27.75 BLD</div><div class="pcu">111 / 2²</div><div class="pcr"><div class="pcrw"><span>Alloc</span><span class="pcrv">2,849.93</span></div><div class="pcrw"><span>Days</span><span class="pcrv">33</span></div><div class="pcrw"><span>Max</span><span class="pcrv">∞</span></div></div><div class="vtg">Vesting 180d</div></div>
+      <div class="pc" data-n="4"><div class="pcl">C1 · P4</div><div class="pcp">13.875 BLD</div><div class="pcu">111 / 2³</div><div class="pcr"><div class="pcrw"><span>Alloc</span><span class="pcrv">4,274.89</span></div><div class="pcrw"><span>Days</span><span class="pcrv">44</span></div><div class="pcrw"><span>Max</span><span class="pcrv">∞</span></div></div><div class="vtg">Vesting 180d</div></div>
+      <div class="pc" data-n="5"><div class="pcl">C1 · P5</div><div class="pcp">6.9375 BLD</div><div class="pcu">111 / 2⁴</div><div class="pcr"><div class="pcrw"><span>Alloc</span><span class="pcrv">5,699.86</span></div><div class="pcrw"><span>Days</span><span class="pcrv">55</span></div><div class="pcrw"><span>Max</span><span class="pcrv">∞</span></div></div><div class="vtg">Vesting 180d</div></div>
+      <div class="pc" data-n="6"><div class="pcl">C1 · P6</div><div class="pcp">3.46875 BLD</div><div class="pcu">111 / 2⁵</div><div class="pcr"><div class="pcrw"><span>Alloc</span><span class="pcrv">7,124.82</span></div><div class="pcrw"><span>Days</span><span class="pcrv">66</span></div><div class="pcrw"><span>Max</span><span class="pcrv">∞</span></div></div><div class="vtg">Vesting 180d</div></div>
+      <div class="pc" data-n="7"><div class="pcl">C1 · P7</div><div class="pcp">1.734375 BLD</div><div class="pcu">111 / 2⁶</div><div class="pcr"><div class="pcrw"><span>Alloc</span><span class="pcrv">8,549.79</span></div><div class="pcrw"><span>Days</span><span class="pcrv">77</span></div><div class="pcrw"><span>Max</span><span class="pcrv">∞</span></div></div><div class="vtg">Vesting 180d</div></div>
+      <div class="pc" data-n="8"><div class="pcl">C1 · P8</div><div class="pcp">0.8671875 BLD</div><div class="pcu">111 / 2⁷</div><div class="pcr"><div class="pcrw"><span>Alloc</span><span class="pcrv">9,974.75</span></div><div class="pcrw"><span>Days</span><span class="pcrv">88</span></div><div class="pcrw"><span>Max</span><span class="pcrv">∞</span></div></div><div class="vtg">Vesting 180d</div></div>
+    </div>
+  </div>
+
+  <div class="pp" id="pp-wt">
+    <div class="wb">
+      <div class="wn">11 YEARS</div>
+      <div style="font-size:13px;color:var(--silver);margin-bottom:6px">347,126,472 seconds from deploy · Gregorian calendar</div>
+      <div style="font-size:11px;color:var(--muted)">Anyone calls <code style="color:var(--c1)">startCycle2()</code> after this threshold. All C1 remainders carry over.</div>
+    </div>
+  </div>
+
+  <div class="pp" id="pp-c2">
+    <div class="pg" style="grid-template-columns:repeat(3,1fr)">
+      <div class="pc" data-n="1"><div class="pcl" style="color:var(--gold)">C2 · P1</div><div class="pcp">0.43359375</div><div class="pcu">111 / 2⁸</div><div class="pcr"><div class="pcrw"><span>Alloc</span><span class="pcrv">1,333.33</span></div><div class="pcrw"><span>Days</span><span class="pcrv">11</span></div><div class="pcrw"><span>Vesting</span><span class="pcrv" style="color:var(--green)">None</span></div></div></div>
+      <div class="pc" data-n="2"><div class="pcl" style="color:var(--gold)">C2 · P2</div><div class="pcp">0.21679688</div><div class="pcu">111 / 2⁹</div><div class="pcr"><div class="pcrw"><span>Alloc</span><span class="pcrv">2,666.67</span></div><div class="pcrw"><span>Days</span><span class="pcrv">22</span></div><div class="pcrw"><span>Vesting</span><span class="pcrv" style="color:var(--green)">None</span></div></div></div>
+      <div class="pc" data-n="3"><div class="pcl" style="color:var(--gold)">C2 · P3</div><div class="pcp">0.10839844</div><div class="pcu">111 / 2¹⁰</div><div class="pcr"><div class="pcrw"><span>Alloc</span><span class="pcrv">4,000.0</span></div><div class="pcrw"><span>Days</span><span class="pcrv">33</span></div><div class="pcrw"><span>Vesting</span><span class="pcrv" style="color:var(--green)">None</span></div></div></div>
+      <div class="pc" data-n="4"><div class="pcl" style="color:var(--gold)">C2 · P4</div><div class="pcp">0.05419922</div><div class="pcu">111 / 2¹¹</div><div class="pcr"><div class="pcrw"><span>Alloc</span><span class="pcrv">5,333.33</span></div><div class="pcrw"><span>Days</span><span class="pcrv">44</span></div><div class="pcrw"><span>Vesting</span><span class="pcrv" style="color:var(--green)">None</span></div></div></div>
+      <div class="pc" data-n="5" style="border-color:rgba(244,63,110,.25)"><div class="pcl" style="color:var(--fp)">C2 · P5</div><div class="pcp" style="-webkit-text-fill-color:var(--fp);color:var(--fp)">0.02709961</div><div class="pcu">111 / 2¹²</div><div class="pcr"><div class="pcrw"><span>Alloc</span><span class="pcrv">6,666.67</span></div><div class="pcrw"><span>Days</span><span class="pcrv">55</span></div><div class="pcrw"><span>Vesting</span><span class="pcrv" style="color:var(--green)">None</span></div></div><div class="dtg">Dust Rule</div></div>
+    </div>
+  </div>
+
+  <div class="pp" id="pp-fp">
+    <div class="fpb">
+      <div class="fpt">FINAL PHASE</div>
+      <div class="fps">The last claimer wins everything that remains.</div>
+      <div class="fpp">0.01354980 BLD per wallet</div>
+      <div class="fpn">111 / 2¹³ &nbsp;·&nbsp; No vesting &nbsp;·&nbsp; Duration: ∞ &nbsp;·&nbsp; Dust Rule always active</div>
+    </div>
+  </div>
+</div>
+</section>
+<div class="dvd"></div>
+
+<!-- TRADE -->
+<section id="trade">
+<div class="wp">
+  <div class="lbl"><div class="lbl-dot"></div><span>DEX Trading</span></div>
+  <h2 class="h2">Trade <span class="gtext">BLD</span></h2>
+  <p class="intro">BLD/ETH liquidity on Uniswap V2. LP tokens permanently locked in the LiquidityVault contract.</p>
+  <div class="tpb fd">
+    <div class="tph">
+      <span class="tpt">BLD / ETH</span>
+      <span class="lb"><span class="ld"></span>Live</span>
+    </div>
+    
+
+<iframe class="df" src="https://dexscreener.com/ethereum/0x884300e185d2830fF15a2FCF4BE91859E98264f0?embed=1&theme=dark&trades=0" loading="lazy"></iframe>
+
+  </div>
+  <div class="tls">
+    <a href="https://app.uniswap.org/#/swap?outputCurrency=0x626f28ba49951F95F8ec4991F6b6d6AcEFd26739&chain=mainnet" target="_blank" rel="noopener" class="bp">Buy on Uniswap V2 ↗</a>
+    <a href="https://dexscreener.com/ethereum/0x884300e185d2830fF15a2FCF4BE91859E98264f0" target="_blank" rel="noopener" class="bo">DEXScreener ↗</a>
+    <a href="https://etherscan.io/token/0x626f28ba49951F95F8ec4991F6b6d6AcEFd26739" target="_blank" rel="noopener" class="bo">Etherscan ↗</a>
+  </div>
+</div>
+</section>
+<div class="dvd"></div>
+
+<!-- CLAIM -->
+<section id="claim">
+<div class="wp">
+  <div class="lbl"><div class="lbl-dot"></div><span>BaldaAirdrop.sol</span></div>
+  <h2 class="h2">Claim <span class="gtext">BLD</span></h2>
+  <p class="intro">Connect your wallet and claim directly on-chain. No intermediary.</p>
+
+  <div class="cbr" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span id="wallet-dot" style="width:8px;height:8px;border-radius:50%;background:var(--muted);flex-shrink:0;box-shadow:none"></span>
+      <span id="wallet-addr" style="font-size:12px;color:var(--muted)">Not connected</span>
+    </div>
+    <button id="connect-btn" onclick="openWalletModal()" class="bp" style="font-size:11px;padding:10px 22px">Connect Wallet</button>
+  </div>
+
+  <!-- WALLET MODAL -->
+  <div id="wallet-modal" class="wm">
+    <div class="wmd">
+      <div class="wmh">
+        <span style="font-family:var(--fd);font-size:18px;letter-spacing:.05em;background:var(--gv);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Connect Wallet</span>
+        <button onclick="closeWalletModal()" style="color:var(--muted);font-size:22px;padding:2px 8px;border-radius:4px;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">&times;</button>
+      </div>
+      <div id="modal-wallet-list" class="wml"></div>
+      <div class="wmf">Mobile: open from your wallet's browser &nbsp;·&nbsp; <a href="https://metamask.io" target="_blank" rel="noopener" style="color:var(--gold)">Get MetaMask ↗</a></div>
+    </div>
+  </div>
+
+  <!-- PERIOD INFO -->
+  <div style="margin-bottom:20px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+      <div class="lbl" style="margin-bottom:0"><div class="lbl-dot"></div><span>Current Period</span></div>
+      <button onclick="loadPeriodInfo()" style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--v1);border:1px solid rgba(124,58,237,.3);border-radius:6px;padding:6px 14px;background:rgba(124,58,237,.08);transition:background .2s" onmouseover="this.style.background='rgba(124,58,237,.15)'" onmouseout="this.style.background='rgba(124,58,237,.08)'">↻ Refresh</button>
+    </div>
+    <div id="period-info-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px">
+      <div class="scard"><div class="sl">Phase</div><div class="sv" style="font-size:15px" id="pi-phase-v">—</div></div>
+      <div class="scard"><div class="sl">Period</div><div class="sv" style="font-size:15px" id="pi-period-v">—</div></div>
+      <div class="scard"><div class="sl">Prize / Wallet</div><div class="sv" style="font-size:13px" id="pi-prize-v">—</div></div>
+      <div class="scard"><div class="sl">Available</div><div class="sv" style="font-size:13px" id="pi-avail-v">—</div></div>
+      <div class="scard"><div class="sl">Time Left</div><div class="sv" style="font-size:13px" id="pi-time-v">—</div></div>
+      <div class="scard"><div class="sl">Claimed</div><div class="sv" style="font-size:15px" id="pi-wallets-v">—</div></div>
+    </div>
+    <div id="pi-dust-banner" style="display:none;margin-top:8px;background:rgba(244,63,110,.07);border:1px solid rgba(244,63,110,.25);border-radius:8px;padding:10px 16px;font-size:12px;color:var(--fp)">
+      ★ Dust Rule active — the next claimer may receive all remaining tokens.
+    </div>
+  </div>
+
+  <!-- AIRDROP LIVE STATS -->
+  <div style="margin-bottom:20px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+      <div class="lbl" style="margin-bottom:0"><div class="lbl-dot"></div><span>Airdrop Live Stats</span></div>
+      <button onclick="loadAirdropStats()" style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--v1);border:1px solid rgba(124,58,237,.3);border-radius:6px;padding:6px 14px;background:rgba(124,58,237,.08);transition:background .2s" onmouseover="this.style.background='rgba(124,58,237,.15)'" onmouseout="this.style.background='rgba(124,58,237,.08)'">↻ Refresh</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-bottom:12px">
+      <div class="scard"><div class="sl">Wallets Claimed</div><div class="sv" style="font-size:15px" id="stats-wallets">—</div></div>
+      <div class="scard"><div class="sl">BLD in Vesting</div><div class="sv" style="font-size:13px" id="stats-in-vesting">—</div></div>
+      <div class="scard"><div class="sl">BLD Released</div><div class="sv" style="font-size:13px;color:var(--green)" id="stats-released">—</div></div>
+    </div>
+    <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:8px">
+        <span>Vesting Progress (180 days)</span>
+        <span id="stats-vesting-pct" style="background:var(--gv);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:600">0%</span>
+      </div>
+      <div style="background:rgba(255,255,255,.06);height:6px;border-radius:99px;overflow:hidden;margin-bottom:8px">
+        <div id="stats-vesting-bar" style="height:100%;background:linear-gradient(90deg,var(--v1),var(--b1));width:0%;transition:width .8s ease;border-radius:99px"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted)">
+        <span id="stats-period-start">Period start: —</span>
+        <span id="stats-period-end">Unlock: —</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- VESTING -->
+  <div style="margin-bottom:20px">
+    <div class="lbl" style="margin-bottom:10px"><div class="lbl-dot"></div><span>Your Vesting (Cycle 1)</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:12px">
+      <div class="scard"><div class="sl">Available to Withdraw</div><div class="sv" style="font-size:13px" id="vest-avail-v">—</div></div>
+      <div class="scard"><div class="sl">Status</div><div class="sv" style="font-size:12px" id="vest-status-v">—</div></div>
+    </div>
+    <button id="withdraw-btn" onclick="doWithdrawVesting()" class="bo" style="width:100%;padding:12px;text-align:center;font-size:11px;letter-spacing:.1em;border-radius:8px;opacity:.4;cursor:not-allowed" disabled>Withdraw Vesting</button>
+  </div>
+
+  <!-- CLAIM BOX -->
+  <div style="background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.2);border-radius:14px;padding:clamp(22px,4vw,40px);text-align:center;position:relative;overflow:hidden;margin-bottom:14px">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(124,58,237,.12),transparent 65%);pointer-events:none"></div>
+    <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">One wallet · One claim · Forever</div>
+    <div id="claim-prize-display" style="font-family:var(--fd);font-size:clamp(28px,5vw,50px);letter-spacing:.05em;margin-bottom:6px;background:var(--gvg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">— BLD</div>
+    <div id="claim-vesting-note" style="font-size:12px;color:var(--silver);margin-bottom:24px">Connect wallet to see current prize</div>
+    <button id="claim-btn" onclick="doClaim()" class="bp" style="font-size:12px;padding:14px 38px;opacity:.4;cursor:not-allowed;width:100%;max-width:300px;border-radius:8px" disabled>Claim BLD</button>
+    <div id="claim-msg" style="margin-top:12px;font-size:12px;min-height:16px"></div>
+  </div>
+
+  <div class="cl">Cycle 1 claims include 180-day linear vesting. Cycle 2 and Final Phase pay 100% immediately. Each wallet can claim exactly once.</div>
+</div>
+</section>
+<div class="dvd"></div>
+
+<!-- FOUNDER VAULT -->
+<section id="founder-vault">
+<div class="wp">
+  <div class="lbl"><div class="lbl-dot"></div><span>VaultCreator.sol — Public Record</span></div>
+  <h2 class="h2">Founder <span class="gtext">Vesting</span></h2>
+  <p class="intro">5,000 BLD vest linearly over 11 Gregorian years. All data read directly from the contract — visible to everyone.</p>
+
+  <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px;padding:clamp(20px,4vw,36px);margin-bottom:4px;position:relative;overflow:hidden">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 0% 50%,rgba(124,58,237,.08),transparent 60%);pointer-events:none"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+      <div style="font-family:var(--fd);font-size:clamp(15px,2.5vw,19px);letter-spacing:.05em;background:var(--gv);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Linear Vesting Progress</div>
+      <div style="font-size:12px;color:var(--muted)">5,000 BLD · 11 Gregorian years</div>
+    </div>
+    <div class="fv-bar-wrap"><div id="fv-bar"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:18px">
+      <span id="fv-start-date">Deploy: —</span>
+      <span id="fv-pct" style="background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:600">0%</span>
+      <span id="fv-end-date">End: —</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px" id="fv-grid">
+      <div class="scard"><div class="sl">Total</div><div class="sv" style="font-size:14px">5,000 <small>BLD</small></div></div>
+      <div class="scard"><div class="sl">Withdrawn</div><div class="sv" style="font-size:14px" id="fv-withdrawn">—</div></div>
+      <div class="scard"><div class="sl">Available Now</div><div class="sv" style="font-size:14px;color:var(--green)" id="fv-available">—</div></div>
+      <div class="scard"><div class="sl">Total Vested</div><div class="sv" style="font-size:14px" id="fv-vested">—</div></div>
+      <div class="scard"><div class="sl">Still Locked</div><div class="sv" style="font-size:14px;color:var(--muted)" id="fv-locked">—</div></div>
+      <div class="scard"><div class="sl">Time Remaining</div><div class="sv" style="font-size:13px" id="fv-remaining">—</div></div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:20px">
+    <div class="scard"><div class="sl">Vesting Start</div><div class="sv" style="font-size:13px" id="fv-deploy">—</div></div>
+    <div class="scard"><div class="sl">Vesting End</div><div class="sv" style="font-size:13px" id="fv-enddate">—</div></div>
+  </div>
+
+  <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:clamp(18px,3vw,28px);margin-bottom:14px">
+    <div style="font-family:var(--fd);font-size:16px;letter-spacing:.05em;margin-bottom:6px">Withdraw</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:14px">Only callable by the founder address set in the constructor.</div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <button id="fv-withdraw-btn" onclick="fvWithdraw()" class="bp" style="font-size:11px;padding:11px 26px;border-radius:7px;opacity:.4;cursor:not-allowed" disabled>Withdraw Available BLD</button>
+      <div id="fv-withdraw-msg" style="font-size:12px"></div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <div class="cl" style="flex:1">Formula: <code>vestedAmount = 5,000e18 × elapsed / 347,126,472</code></div>
+    <button onclick="loadFounderVault()" style="flex-shrink:0;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--v1);border:1px solid rgba(124,58,237,.3);border-radius:6px;padding:8px 16px;background:rgba(124,58,237,.08);white-space:nowrap;transition:background .2s" onmouseover="this.style.background='rgba(124,58,237,.15)'" onmouseout="this.style.background='rgba(124,58,237,.08)'">↻ Refresh</button>
+  </div>
+</div>
+</section>
+<div class="dvd"></div>
+
+<!-- FOOTER -->
+<footer>
+<div class="wp">
+  <div class="fg">
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="36" height="36" aria-hidden="true">
+  <circle cx="256" cy="256" r="256" fill="#120820"/>
+  <circle cx="256" cy="256" r="230" fill="#1a0a2e"/>
+  <circle cx="256" cy="256" r="10" fill="#9B6FFF"/>
+  <path d="M 256 206 A 50 50 0 0 1 256 306" fill="none" stroke="#9B6FFF" stroke-width="14" stroke-linecap="round"/>
+  <path d="M 256 206 A 50 50 0 0 0 256 306" fill="none" stroke="#9B6FFF" stroke-width="14" stroke-linecap="round"/>
+  <path d="M 256 178 A 78 78 0 0 1 256 334" fill="none" stroke="#8B5FEF" stroke-width="11" stroke-linecap="round" opacity=".9"/>
+  <path d="M 256 178 A 78 78 0 0 0 256 334" fill="none" stroke="#8B5FEF" stroke-width="11" stroke-linecap="round" opacity=".9"/>
+  <path d="M 256 150 A 106 106 0 0 1 256 362" fill="none" stroke="#7B4FDF" stroke-width="9" stroke-linecap="round" opacity=".78"/>
+  <path d="M 256 150 A 106 106 0 0 0 256 362" fill="none" stroke="#7B4FDF" stroke-width="9" stroke-linecap="round" opacity=".78"/>
+  <path d="M 256 122 A 134 134 0 0 1 256 390" fill="none" stroke="#6C3CE1" stroke-width="7.5" stroke-linecap="round" opacity=".64"/>
+  <path d="M 256 122 A 134 134 0 0 0 256 390" fill="none" stroke="#6C3CE1" stroke-width="7.5" stroke-linecap="round" opacity=".64"/>
+  <path d="M 256 96 A 160 160 0 0 1 256 416" fill="none" stroke="#5C2CC1" stroke-width="6" stroke-linecap="round" opacity=".48"/>
+  <path d="M 256 96 A 160 160 0 0 0 256 416" fill="none" stroke="#5C2CC1" stroke-width="6" stroke-linecap="round" opacity=".48"/>
+  <path d="M 256 72 A 184 184 0 0 1 256 440" fill="none" stroke="#4C1CA1" stroke-width="4.5" stroke-linecap="round" opacity=".32"/>
+  <path d="M 256 72 A 184 184 0 0 0 256 440" fill="none" stroke="#4C1CA1" stroke-width="4.5" stroke-linecap="round" opacity=".32"/>
+  <path d="M 256 50 A 206 206 0 0 1 256 462" fill="none" stroke="#3C0C81" stroke-width="3" stroke-linecap="round" opacity=".18"/>
+  <path d="M 256 50 A 206 206 0 0 0 256 462" fill="none" stroke="#3C0C81" stroke-width="3" stroke-linecap="round" opacity=".18"/>
+  <circle cx="256" cy="256" r="245" fill="none" stroke="#6C3CE1" stroke-width="1.5" opacity=".25"/>
+  <circle cx="256" cy="256" r="22" fill="#6C3CE1" opacity=".15"/>
+  <circle cx="256" cy="256" r="10" fill="#C4A0FF" opacity=".9"/>
+  <circle cx="256" cy="256" r="5" fill="#ffffff" opacity=".8"/>
+</svg><div class="fbl" style="margin-bottom:0">Balda Protocol</div></div>
+      <p class="fbp">Pure ERC-20. 91,000 BLD fixed forever. Ownerless. Autonomous distribution on Ethereum Mainnet.</p>
+      <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:4px">
+        <span class="bdg">ERC-20</span><span class="bdg">Ethereum</span><span class="bdg">MIT</span><span class="bdg g">Immutable</span>
+      </div>
+    </div>
+    <div class="fc">
+      <h4>Protocol</h4>
+      <ul>
+        <li><a href="#supply">Supply</a></li>
+        <li><a href="#airdrop">Airdrop</a></li>
+        <li><a href="#trade">Trade BLD</a></li>
+        <li><a href="#claim">Claim BLD</a></li>
+        <li><a href="#founder-vault">Founder Vault</a></li>
+      </ul>
+    </div>
+    <div class="fc">
+      <h4>Resources</h4>
+      <ul>
+        <li><span style="color:var(--muted)">GitHub — Coming Soon</span></li>
+        <li><a href="https://etherscan.io/token/0x626f28ba49951F95F8ec4991F6b6d6AcEFd26739" target="_blank" rel="noopener">Etherscan ↗</a></li>
+        <li><a href="https://app.uniswap.org/#/swap?outputCurrency=0x626f28ba49951F95F8ec4991F6b6d6AcEFd26739" target="_blank" rel="noopener">Uniswap V2 ↗</a></li>
+        <li><a href="https://dexscreener.com/ethereum/0x884300e185d2830fF15a2FCF4BE91859E98264f0" target="_blank" rel="noopener">DEXScreener ↗</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="fb2">
+    <p>© Balda Protocol · MIT License · No admin keys · Immutable after deploy</p>
+    <p class="fsig">By Deaf Italian, with AI. Concept &amp; Decision by Deaf Italian only.</p>
+  </div>
+</div>
+</footer>
+
+<script>
+'use strict';
+/* ── CANVAS ── */
+(function(){
+  var c=document.getElementById('bgc');if(!c||!c.getContext)return;
+  var x=c.getContext('2d'),W,H,P;
+  function rsz(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+  function iP(){P=[];var n=Math.min(40,Math.floor(W*H/22000));for(var i=0;i<n;i++)P.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+.4,dx:(Math.random()-.5)*.2,dy:(Math.random()-.5)*.2,a:Math.random()*.4+.1,h:Math.random()<.5?'rgba(124,58,237,':'rgba(37,99,235,'})}
+  function dr(){
+    x.clearRect(0,0,W,H);
+    x.lineWidth=.3;
+    for(var a=0;a<P.length;a++)for(var b=a+1;b<P.length;b++){var dx=P[a].x-P[b].x,dy=P[a].y-P[b].y,d=Math.sqrt(dx*dx+dy*dy);if(d<140){x.strokeStyle='rgba(124,58,237,'+((1-d/140)*.06)+')';x.beginPath();x.moveTo(P[a].x,P[a].y);x.lineTo(P[b].x,P[b].y);x.stroke()}}
+    for(var k=0;k<P.length;k++){var p=P[k];x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fillStyle=p.h+p.a+')';x.fill();p.x+=p.dx;p.y+=p.dy;if(p.x<0||p.x>W)p.dx=-p.dx;if(p.y<0||p.y>H)p.dy=-p.dy}
+    requestAnimationFrame(dr);
+  }
+  var tm;window.addEventListener('resize',function(){clearTimeout(tm);tm=setTimeout(function(){rsz();iP()},200)});
+  rsz();iP();dr();
+})();
+
+/* ── NAV ── */
+/* ── NAV PRICE ── */
+async function fetchNavPrice(){
+  try{
+    var res=await fetch('https://api.dexscreener.com/latest/dex/pairs/ethereum/0x884300e185d2830ff15a2fcf4be91859e98264f0');
+    var data=await res.json();
+    var pair=data.pairs&&data.pairs[0];
+    if(!pair)return;
+    var price=parseFloat(pair.priceUsd);
+    var chg=parseFloat(pair.priceChange&&pair.priceChange.h24||0);
+    var vol=parseFloat(pair.volume&&pair.volume.h24||0);
+    var liq=parseFloat(pair.liquidity&&pair.liquidity.usd||0);
+    var priceStr='$'+price.toFixed(price<0.01?6:price<1?4:2);
+    var chgStr=(chg>=0?'▲+':'▼')+Math.abs(chg).toFixed(2)+'%';
+    var chgColor=chg>=0?'var(--green)':'var(--fp)';
+    var fmtUsd=function(n){if(n>=1000)return '$'+(n/1000).toFixed(1)+'K';return '$'+n.toFixed(2);};
+    // Navbar
+    document.getElementById('nav-price-val').textContent='BLD '+priceStr;
+    document.getElementById('nav-price-chg').textContent=chgStr;
+    document.getElementById('nav-price-chg').style.color=chgColor;
+    document.getElementById('nav-price-dot').style.background=chg>=0?'var(--green)':'var(--fp)';
+    // Price bar
+    document.getElementById('pb-price').textContent=priceStr;
+    document.getElementById('pb-chg').textContent=chgStr;
+    document.getElementById('pb-chg').style.color=chgColor;
+    document.getElementById('pb-vol').textContent=fmtUsd(vol);
+    document.getElementById('pb-liq-val').textContent=fmtUsd(liq);
+  }catch(e){}
+}
+fetchNavPrice();
+setInterval(fetchNavPrice,30000);
+
+(function(){
+  var n=document.getElementById('nav');
+  var pb=document.getElementById('price-bar');
+  var l=0;
+  window.addEventListener('scroll',function(){
+    var y=window.scrollY;
+    var hide=y>l&&y>80;
+    n.style.transform=hide?'translateY(-100%)':'translateY(0)';
+    if(pb)pb.style.transform=hide?'translateY(-300%)':'translateY(0)';
+    l=y;
+  },{passive:true});
+})();
+var bg=document.getElementById('bgbtn'),mm=document.getElementById('mm');
+bg.addEventListener('click',function(){var o=mm.classList.toggle('open');bg.setAttribute('aria-expanded',o?'true':'false')});
+function cMM(){mm.classList.remove('open');bg.setAttribute('aria-expanded','false')}
+
+/* ── TABS ── */
+function sTab(id,btn){
+  document.querySelectorAll('.pp').forEach(function(p){p.classList.remove('a')});
+  document.querySelectorAll('.tb').forEach(function(b){b.classList.remove('a')});
+  var p=document.getElementById('pp-'+id);if(p)p.classList.add('a');
+  if(btn)btn.classList.add('a');
+}
+
+/* ── FADE ── */
+(function(){
+  if(!window.IntersectionObserver){document.querySelectorAll('.fd').forEach(function(e){e.classList.add('in')});return}
+  var o=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)e.target.classList.add('in')})},{threshold:.08});
+  document.querySelectorAll('.fd').forEach(function(e){o.observe(e)});
+})();
+</script>
+
+<!-- ETHERS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+<script>
+'use strict';
+var AIRDROP_ADDRESS='0x61c35A27831AE981695442Ab42B88dEB0FcF17E7';
+var VAULT_ADDRESS='0x315C7Db81194805840220CAfA7fcd31B24f8C8Dd';
+var CHAIN_ID=1;
+var AIRDROP_ABI=['function claim() external','function withdrawVesting() external','function availableVesting(address wallet) external view returns (uint256)','function currentPeriodInfo() external view returns (uint8 phase, uint8 periodIndex, uint256 prize, uint256 mcapAvailable, uint256 walletsCount, uint256 periodStart, uint256 periodEnd, uint256 maxWallets, bool dustRuleActive)','function timeLeftInPeriod() external view returns (uint256)','function isWaitingForCycle2() external view returns (bool)'];
+var VAULT_ABI=['function availableVesting() external view returns (uint256)','function vestingWithdrawn() external view returns (uint256)','function deployTime() external view returns (uint256)','function founder() external view returns (address)','function withdrawVesting() external'];
+var provider=null,signer=null,contract=null,userAddr=null,detectedWallets=[];
+
+window.addEventListener('eip6963:announceProvider',function(e){var d=e.detail;if(!detectedWallets.find(function(w){return w.info.rdns===d.info.rdns;}))detectedWallets.push(d);});
+window.dispatchEvent(new Event('eip6963:requestProvider'));
+
+function injectLegacy(){if(!window.ethereum)return;var name=window.ethereum.isMetaMask?'MetaMask':window.ethereum.isCoinbaseWallet?'Coinbase Wallet':window.ethereum.isRabby?'Rabby':'Browser Wallet';var rdns='legacy.'+name.toLowerCase().replace(/\s/g,'.');if(!detectedWallets.find(function(w){return w.info.rdns===rdns;}))detectedWallets.push({info:{name:name,rdns:rdns,icon:''},provider:window.ethereum});}
+
+function openWalletModal(){window.dispatchEvent(new Event('eip6963:requestProvider'));injectLegacy();setTimeout(renderModal,120);}
+function closeWalletModal(){document.getElementById('wallet-modal').style.display='none';document.body.style.overflow='';}
+document.getElementById('wallet-modal').addEventListener('click',function(e){if(e.target===this)closeWalletModal();});
+function renderModal(){
+  injectLegacy();
+  var list=document.getElementById('modal-wallet-list');list.innerHTML='';
+  if(!detectedWallets.length){
+    list.innerHTML='<div style="padding:24px;text-align:center;font-size:13px;color:var(--muted)">No wallet detected.<br><br>Install <a href="https://metamask.io" target="_blank" rel="noopener" style="color:var(--gold)">MetaMask</a> or open from your wallet app\'s browser.</div>';
+  }else{
+    detectedWallets.forEach(function(w){
+      var btn=document.createElement('button');
+      btn.style.cssText='display:flex;align-items:center;gap:14px;width:100%;padding:14px 16px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--fm);font-size:13px;cursor:pointer;transition:border-color .2s,background .2s;text-align:left;margin-bottom:4px';
+      btn.onmouseover=function(){this.style.borderColor='rgba(124,58,237,.5)';this.style.background='rgba(124,58,237,.08)'};
+      btn.onmouseout=function(){this.style.borderColor='var(--border)';this.style.background='rgba(255,255,255,.03)'};
+      var ico=w.info.icon?'<img src="'+w.info.icon+'" style="width:30px;height:30px;border-radius:8px;flex-shrink:0" alt="">':'<div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--v1),var(--b1));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">🔑</div>';
+      btn.innerHTML=ico+'<span>'+w.info.name+'</span>';
+      btn.onclick=function(){connectWith(w)};
+      list.appendChild(btn);
+    });
+  }
+  document.getElementById('wallet-modal').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+
+async function connectWith(w){
+  try{
+    closeWalletModal();
+    await w.provider.request({method:'eth_requestAccounts'});
+    provider=new ethers.BrowserProvider(w.provider);
+    var net=await provider.getNetwork();
+    if(Number(net.chainId)!==CHAIN_ID){try{await w.provider.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x1'}]});provider=new ethers.BrowserProvider(w.provider);}catch(se){alert('Switch to Ethereum Mainnet.');return;}}
+    signer=await provider.getSigner();userAddr=await signer.getAddress();
+    contract=new ethers.Contract(AIRDROP_ADDRESS,AIRDROP_ABI,provider);
+    var dot=document.getElementById('wallet-dot');dot.style.background='var(--green)';dot.style.boxShadow='0 0 8px rgba(34,211,165,.6)';
+    document.getElementById('wallet-addr').style.color='var(--text)';
+    document.getElementById('wallet-addr').textContent=w.info.name+' · '+userAddr.slice(0,6)+'…'+userAddr.slice(-4);
+    var cb=document.getElementById('connect-btn');cb.textContent='Connected';cb.style.opacity='.5';cb.style.cursor='default';cb.onclick=null;
+    await loadPeriodInfo();await loadAirdropStats(); await highlightActivePeriod();await loadVestingInfo();await loadFounderVault();
+    if(w.provider.on){w.provider.on('accountsChanged',function(a){if(!a||!a.length)location.reload();else connectWith(w);});w.provider.on('chainChanged',function(){location.reload();});}
+  }catch(e){if(!String(e?.message).includes('rejected'))alert('Connection failed: '+(e?.message||e));}
+}
+
+function fmtBLD(wei){try{var n=parseFloat(ethers.formatUnits(wei,18));if(n===0)return '0 BLD';if(n<0.0001)return n.toExponential(4)+' BLD';return n.toPrecision(6).replace(/\.?0+$/,'')+' BLD';}catch(e){return '—';}}
+function fmtTime(s){s=Number(s);if(s>=1e18)return '∞';if(s<=0)return 'Expired';var d=Math.floor(s/86400),h=Math.floor((s%86400)/3600),m=Math.floor((s%3600)/60);if(d>0)return d+'d '+h+'h';if(h>0)return h+'h '+m+'m';return m+'m';}
+function fmtTimeLong(s){var y=Math.floor(s/31556952),d=Math.floor((s%31556952)/86400),h=Math.floor((s%86400)/3600);if(y>0)return y+'y '+d+'d';if(d>0)return d+'d '+h+'h';return Math.floor(s/3600)+'h';}
+function phaseLabel(p){return['Cycle 1','Cycle 2','Final Phase','Closed'][Number(p)]||'—';}
+function setMsg(t,c){var e=document.getElementById('claim-msg');if(e){e.textContent=t;e.style.color=c||'var(--silver)';}}
+function enBtn(id,on){var b=document.getElementById(id);if(!b)return;b.disabled=!on;b.style.opacity=on?'1':'0.4';b.style.cursor=on?'pointer':'not-allowed';}
+
+async function loadPeriodInfo(){
+  if(!contract)return;
+  try{
+    var info=await contract.currentPeriodInfo();var tl=await contract.timeLeftInPeriod();var wt=await contract.isWaitingForCycle2();
+    var prize=fmtBLD(info.prize);
+    document.getElementById('pi-phase-v').textContent=phaseLabel(info.phase);
+    document.getElementById('pi-period-v').textContent=wt?'Waiting C2':'P'+(Number(info.periodIndex)+1);
+    document.getElementById('pi-prize-v').textContent=prize;
+    document.getElementById('pi-avail-v').textContent=fmtBLD(info.mcapAvailable);
+    document.getElementById('pi-time-v').textContent=wt?'Waiting':fmtTime(tl);
+    document.getElementById('pi-wallets-v').textContent=info.walletsCount.toString();
+    document.getElementById('pi-dust-banner').style.display=info.dustRuleActive?'block':'none';
+    document.getElementById('claim-prize-display').textContent=prize;
+    document.getElementById('claim-vesting-note').textContent=Number(info.phase)===0?'+ 180-day linear vesting':'100% immediate payout';
+    var closed=Number(info.phase)===3;
+    enBtn('claim-btn',!closed&&!wt&&signer!==null);
+    if(closed)setMsg('Contract is permanently closed.','var(--muted)');
+    else if(wt)setMsg('Waiting for Cycle 2 — callable after 11 Gregorian years from deploy.','var(--silver)');
+  }catch(e){document.getElementById('pi-phase-v').textContent='Read error';}
+}
+
+
+async function highlightActivePeriod(){
+  try{
+    var rp = new ethers.JsonRpcProvider('https://ethereum.publicnode.com');
+    var c = new ethers.Contract(AIRDROP_ADDRESS, AIRDROP_ABI, rp);
+    var info = await c.currentPeriodInfo();
+    var phase = Number(info.phase);
+    var period = Number(info.periodIndex);
+    var closed = phase === 3;
+    if(closed) return;
+    
+    // Rimuovi tutti gli active-period esistenti
+    document.querySelectorAll('.pc').forEach(function(el){
+      el.classList.remove('active-period');
+      var badge = el.querySelector('.period-live-badge');
+      if(badge) badge.remove();
+    });
+    
+    // Trova il tab corretto
+    var tabMap = {0:'pp-c1', 2:'pp-c2', 4:'pp-fp'};
+    var tabId = tabMap[phase] || 'pp-c1';
+    var panel = document.getElementById(tabId);
+    if(!panel) return;
+    
+    // Trova il periodo corretto (0-indexed)
+    var cards = panel.querySelectorAll('.pc');
+    var targetCard = cards[period];
+    if(!targetCard) return;
+    
+    // Attiva il periodo
+    targetCard.classList.add('active-period');
+    var badge = document.createElement('div');
+    badge.className = 'period-live-badge';
+    badge.innerHTML = '<span class="period-live-dot"></span>LIVE NOW';
+    targetCard.querySelector('.pcr').appendChild(badge);
+    
+    // Attiva il tab corretto
+    var tabBtnMap = {0:'c1',2:'c2',4:'fp'};
+    var btnId = tabBtnMap[phase];
+    if(btnId){
+      var btn = document.querySelector('[onclick*="'+btnId+'"]');
+      if(btn) sTab(btnId, btn);
+    }
+  }catch(e){console.error('highlightActivePeriod',e);}
+}
+async function loadAirdropStats(){
+  try{
+    var rp=provider||new ethers.JsonRpcProvider('https://ethereum.publicnode.com');
+    var c=new ethers.Contract(AIRDROP_ADDRESS,AIRDROP_ABI,rp);
+    var info=await c.currentPeriodInfo();
+    var wallets=Number(info.walletsCount);
+    var prize=info.prize;
+    var periodStart=Number(info.periodStart);
+    var VESTING_DURATION=15552000; // 180 giorni in secondi
+    var now=Math.floor(Date.now()/1000);
+    var elapsed=Math.max(0,now-periodStart);
+    var vestingPct=Math.min(100,(elapsed/VESTING_DURATION)*100);
+    // BLD totale in vesting = wallets * prize
+    var totalVesting=parseFloat(ethers.formatUnits(prize,18))*wallets;
+    // BLD rilasciato = totale * pct maturata
+    var released=totalVesting*(vestingPct/100);
+    var inVesting=totalVesting-released;
+    var maxW=Number(info.maxWallets);
+    var maxStr=maxW>=1e18?'∞':maxW.toString();
+    document.getElementById('stats-wallets').textContent=wallets+' / '+maxStr;
+    document.getElementById('stats-in-vesting').textContent=inVesting.toFixed(4)+' BLD';
+    document.getElementById('stats-released').textContent=released.toFixed(4)+' BLD';
+    document.getElementById('stats-vesting-bar').style.width=vestingPct.toFixed(2)+'%';
+    document.getElementById('stats-vesting-pct').textContent=vestingPct.toFixed(2)+'%';
+    var fmtD=function(ts){return new Date(ts*1000).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});};
+    document.getElementById('stats-period-start').textContent='Period start: '+fmtD(periodStart);
+    document.getElementById('stats-period-end').textContent='Unlock: '+fmtD(periodStart+VESTING_DURATION);
+  }catch(e){console.error('loadAirdropStats',e);}
+}
+
+async function loadVestingInfo(){
+  if(!contract||!userAddr)return;
+  try{var a=await contract.availableVesting(userAddr);var has=a>0n;document.getElementById('vest-avail-v').textContent=fmtBLD(a);document.getElementById('vest-status-v').textContent=has?'Ready to withdraw':'Nothing available';document.getElementById('vest-status-v').style.color=has?'var(--green)':'var(--muted)';enBtn('withdraw-btn',has&&signer!==null);}catch(e){}
+}
+
+async function doClaim(){
+  if(!signer){openWalletModal();return;}
+  var btn=document.getElementById('claim-btn');
+  try{btn.textContent='Sending…';btn.disabled=true;setMsg('Waiting for wallet…','var(--silver)');var tx=await(new ethers.Contract(AIRDROP_ADDRESS,AIRDROP_ABI,signer)).claim();btn.textContent='Confirming…';setMsg('Transaction sent…','var(--silver)');var rx=await tx.wait();setMsg('✓ Claimed! Tx: '+rx.hash.slice(0,10)+'…','var(--green)');btn.textContent='Claimed ✓';enBtn('claim-btn',false);await loadPeriodInfo();await loadVestingInfo();}
+  catch(e){var m=e?.reason||e?.message||'Transaction failed';if(m.includes('AlreadyClaimed'))m='This wallet has already claimed.';else if(m.includes('ContractClosed'))m='Contract is closed.';else if(m.includes('user rejected'))m='Rejected.';setMsg('✗ '+m,'var(--fp)');btn.textContent='Claim BLD';enBtn('claim-btn',true);}
+}
+
+async function doWithdrawVesting(){
+  if(!signer){openWalletModal();return;}
+  var btn=document.getElementById('withdraw-btn');
+  try{btn.textContent='Sending…';btn.disabled=true;var tx=await(new ethers.Contract(AIRDROP_ADDRESS,AIRDROP_ABI,signer)).withdrawVesting();btn.textContent='Confirming…';await tx.wait();document.getElementById('vest-avail-v').textContent='0 BLD';document.getElementById('vest-status-v').textContent='Withdrawn ✓';document.getElementById('vest-status-v').style.color='var(--green)';btn.textContent='Withdrawn ✓';enBtn('withdraw-btn',false);}
+  catch(e){var m=e?.reason||e?.message||'Transaction failed';if(m.includes('user rejected'))m='Rejected.';alert('✗ '+m);btn.textContent='Withdraw Vesting';enBtn('withdraw-btn',true);}
+}
+
+async function loadFounderVault(){
+  if(VAULT_ADDRESS.startsWith('['))return;
+  try{
+    var rp=new ethers.JsonRpcProvider('https://ethereum.publicnode.com');
+    var vault=new ethers.Contract(VAULT_ADDRESS,VAULT_ABI,rp);
+    var[avail,withdrawn,deployTime]=await Promise.all([vault.availableVesting(),vault.vestingWithdrawn(),vault.deployTime()]);
+    var now=Math.floor(Date.now()/1000),deploy=Number(deployTime),DUR=347126472;
+    var elapsed=Math.min(now-deploy,DUR),endTime=deploy+DUR;
+    var aB=parseFloat(ethers.formatUnits(avail,18)),wB=parseFloat(ethers.formatUnits(withdrawn,18));
+    var vB=5000*elapsed/DUR,lB=Math.max(0,5000-vB),pct=Math.min(100,(elapsed/DUR)*100);
+    var fmtD=function(ts){return new Date(ts*1000).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});};
+    var fmt=function(n){return n.toFixed(4)+' BLD';};
+    document.getElementById('fv-bar').style.width=pct.toFixed(2)+'%';
+    document.getElementById('fv-pct').textContent=pct.toFixed(2)+'%';
+    document.getElementById('fv-start-date').textContent='Deploy: '+fmtD(deploy);
+    document.getElementById('fv-end-date').textContent='End: '+fmtD(endTime);
+    document.getElementById('fv-withdrawn').textContent=fmt(wB);
+    document.getElementById('fv-available').textContent=fmt(aB);
+    document.getElementById('fv-vested').textContent=fmt(vB);
+    document.getElementById('fv-locked').textContent=fmt(lB);
+    document.getElementById('fv-remaining').textContent=endTime>now?fmtTimeLong(endTime-now):'Fully vested';
+    document.getElementById('fv-deploy').textContent=fmtD(deploy);
+    document.getElementById('fv-enddate').textContent=fmtD(endTime);
+    if(signer&&userAddr){try{var fa=await vault.founder();var iF=fa.toLowerCase()===userAddr.toLowerCase();var hA=avail>0n;enBtn('fv-withdraw-btn',iF&&hA);if(!iF){document.getElementById('fv-withdraw-msg').textContent='Connected wallet is not the founder address.';document.getElementById('fv-withdraw-msg').style.color='var(--muted)';}}catch(e2){}}
+  }catch(e){console.error(e);}
+}
+
+async function fvWithdraw(){
+  if(!signer){openWalletModal();return;}
+  var btn=document.getElementById('fv-withdraw-btn'),msg=document.getElementById('fv-withdraw-msg');
+  try{btn.textContent='Sending…';btn.disabled=true;msg.textContent='Waiting…';msg.style.color='var(--silver)';var tx=await(new ethers.Contract(VAULT_ADDRESS,VAULT_ABI,signer)).withdrawVesting();btn.textContent='Confirming…';await tx.wait();msg.textContent='✓ Withdrawn!';msg.style.color='var(--green)';btn.textContent='Withdrawn ✓';enBtn('fv-withdraw-btn',false);await loadFounderVault();}
+  catch(e){var m=e?.reason||e?.message||'Transaction failed';if(m.includes('user rejected'))m='Rejected.';msg.textContent='✗ '+m;msg.style.color='var(--fp)';btn.textContent='Withdraw Available BLD';enBtn('fv-withdraw-btn',true);}
+}
+
+window.addEventListener('load',async function(){
+  try{
+    var rp=new ethers.JsonRpcProvider('https://ethereum.publicnode.com');
+    if(!AIRDROP_ADDRESS.startsWith('[')){contract=new ethers.Contract(AIRDROP_ADDRESS,AIRDROP_ABI,rp);await loadPeriodInfo();await loadAirdropStats(); await highlightActivePeriod();}
+    await loadFounderVault();
+  }catch(e){}
+});
+</script>
+</body>
+</html>
