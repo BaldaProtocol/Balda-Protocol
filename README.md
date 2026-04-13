@@ -1,5 +1,7 @@
 # Balda Protocol — Technical README
 
+[![Website](https://img.shields.io/badge/Website-Live-brightgreen)](https://baldaprotocol.github.io/Balda-Protocol/) [![Italian README](https://img.shields.io/badge/README-Italiano-blue)](./README_IT.md)
+
 > **Author:** Deaf Italian · *Concept & Decision by Deaf Italian only. Built with AI.*
 > **License:** MIT · **Solidity:** ^0.8.20 · **Dependencies:** OpenZeppelin
 
