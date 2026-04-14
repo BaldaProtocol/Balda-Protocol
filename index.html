@@ -870,14 +870,14 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
 /* ── NAV PRICE ── */
 async function fetchNavPrice(){
   try{
-    var res=await fetch('https://api.dexscreener.com/latest/dex/pairs/ethereum/0x884300e185d2830ff15a2fcf4be91859e98264f0');
+    var res=await fetch('https://api.geckoterminal.com/api/v2/networks/eth/pools/0x884300e185d2830ff15a2fcf4be91859e98264f0');
     var data=await res.json();
-    var pair=data.pairs&&data.pairs[0];
-    if(!pair)return;
-    var price=parseFloat(pair.priceUsd);
-    var chg=parseFloat(pair.priceChange&&pair.priceChange.h24||0);
-    var vol=parseFloat(pair.volume&&pair.volume.h24||0);
-    var liq=parseFloat(pair.liquidity&&pair.liquidity.usd||0);
+    var attr=data.data&&data.data.attributes;
+    if(!attr)return;
+    var price=parseFloat(attr.base_token_price_usd);
+    var chg=parseFloat(attr.price_change_percentage&&attr.price_change_percentage.h24||0);
+    var vol=parseFloat(attr.volume_usd&&attr.volume_usd.h24||0);
+    var liq=parseFloat(attr.reserve_in_usd||0);
     var priceStr='$'+price.toFixed(price<0.01?6:price<1?4:2);
     var chgStr=(chg>=0?'▲+':'▼')+Math.abs(chg).toFixed(2)+'%';
     var chgColor=chg>=0?'var(--green)':'var(--fp)';
