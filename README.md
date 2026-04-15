@@ -6,6 +6,22 @@
 
 </div>
 
+## 📋 Listing
+
+| Field | Value |
+|---|---|
+| Contract | `0x626f28ba49951F95F8ec4991F6b6d6AcEFd26739` |
+| Network | Ethereum Mainnet |
+| Chain ID | 1 |
+| Decimals | 18 |
+| Total Supply | 91,000 BLD |
+| Circulating Supply | ~80,000 BLD |
+| Deploy Date | April 11, 2026 |
+
+For full listing information including tokenomics, logo assets and circulating supply methodology → [LISTING.md](./LISTING.md)
+
+---
+
 > **Author:** Deaf Italian · *Concept & Decision by Deaf Italian only. Built with AI.*
 > **License:** MIT · **Solidity:** ^0.8.20 · **Dependencies:** OpenZeppelin
 
