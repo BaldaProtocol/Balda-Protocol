@@ -13,7 +13,7 @@
 | Contract | `0x626f28ba49951F95F8ec4991F6b6d6AcEFd26739` |
 | Network | Ethereum Mainnet |
 | Chain ID | 1 |
-| Deploy Date | April 11, 2026 |
+| Deploy Date | April 11, 2026 — 07:56:20 CET (05:56:20 UTC) |
 
 ## Links
 

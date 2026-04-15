@@ -16,7 +16,7 @@
 | Decimals | 18 |
 | Total Supply | 91,000 BLD |
 | Circulating Supply | ~80,000 BLD |
-| Deploy Date | April 11, 2026 |
+| Deploy Date | April 11, 2026 — 07:56:20 CET (05:56:20 UTC) |
 
 For full listing information including tokenomics, logo assets and circulating supply methodology → [LISTING.md](./LISTING.md)
 
