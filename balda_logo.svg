@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+
+  <!-- Sfondo circolare viola scuro -->
+  <circle cx="256" cy="256" r="256" fill="#120820"/>
+
+  <!-- Cerchio interno leggermente più chiaro -->
+  <circle cx="256" cy="256" r="230" fill="#1a0a2e"/>
+
+  <!-- ONDE SONORE — 7 archi simmetrici che si espandono dal centro -->
+  <!-- Centro — punto sorgente del suono (silenzio che diventa onda) -->
+  <circle cx="256" cy="256" r="10" fill="#9B6FFF"/>
+
+  <!-- Onda 1 — vicinissima al centro -->
+  <path d="M 256 206 A 50 50 0 0 1 256 306" fill="none" stroke="#9B6FFF" stroke-width="14" stroke-linecap="round" opacity="1"/>
+  <path d="M 256 206 A 50 50 0 0 0 256 306" fill="none" stroke="#9B6FFF" stroke-width="14" stroke-linecap="round" opacity="1"/>
+
+  <!-- Onda 2 -->
+  <path d="M 256 178 A 78 78 0 0 1 256 334" fill="none" stroke="#8B5FEF" stroke-width="11" stroke-linecap="round" opacity="0.9"/>
+  <path d="M 256 178 A 78 78 0 0 0 256 334" fill="none" stroke="#8B5FEF" stroke-width="11" stroke-linecap="round" opacity="0.9"/>
+
+  <!-- Onda 3 -->
+  <path d="M 256 150 A 106 106 0 0 1 256 362" fill="none" stroke="#7B4FDF" stroke-width="9" stroke-linecap="round" opacity="0.78"/>
+  <path d="M 256 150 A 106 106 0 0 0 256 362" fill="none" stroke="#7B4FDF" stroke-width="9" stroke-linecap="round" opacity="0.78"/>
+
+  <!-- Onda 4 -->
+  <path d="M 256 122 A 134 134 0 0 1 256 390" fill="none" stroke="#6C3CE1" stroke-width="7.5" stroke-linecap="round" opacity="0.64"/>
+  <path d="M 256 122 A 134 134 0 0 0 256 390" fill="none" stroke="#6C3CE1" stroke-width="7.5" stroke-linecap="round" opacity="0.64"/>
+
+  <!-- Onda 5 -->
+  <path d="M 256 96 A 160 160 0 0 1 256 416" fill="none" stroke="#5C2CC1" stroke-width="6" stroke-linecap="round" opacity="0.48"/>
+  <path d="M 256 96 A 160 160 0 0 0 256 416" fill="none" stroke="#5C2CC1" stroke-width="6" stroke-linecap="round" opacity="0.48"/>
+
+  <!-- Onda 6 -->
+  <path d="M 256 72 A 184 184 0 0 1 256 440" fill="none" stroke="#4C1CA1" stroke-width="4.5" stroke-linecap="round" opacity="0.32"/>
+  <path d="M 256 72 A 184 184 0 0 0 256 440" fill="none" stroke="#4C1CA1" stroke-width="4.5" stroke-linecap="round" opacity="0.32"/>
+
+  <!-- Onda 7 — più esterna, quasi svanisce -->
+  <path d="M 256 50 A 206 206 0 0 1 256 462" fill="none" stroke="#3C0C81" stroke-width="3" stroke-linecap="round" opacity="0.18"/>
+  <path d="M 256 50 A 206 206 0 0 0 256 462" fill="none" stroke="#3C0C81" stroke-width="3" stroke-linecap="round" opacity="0.18"/>
+
+  <!-- Anello esterno sottile -->
+  <circle cx="256" cy="256" r="245" fill="none" stroke="#6C3CE1" stroke-width="1.5" opacity="0.25"/>
+
+  <!-- Bagliore centrale -->
+  <circle cx="256" cy="256" r="22" fill="#6C3CE1" opacity="0.15"/>
+  <circle cx="256" cy="256" r="10" fill="#C4A0FF" opacity="0.9"/>
+  <circle cx="256" cy="256" r="5" fill="#ffffff" opacity="0.8"/>
+
+</svg>
