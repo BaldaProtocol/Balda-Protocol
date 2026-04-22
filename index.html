@@ -729,6 +729,8 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
     <div id="claim-vesting-note" style="font-size:12px;color:var(--silver);margin-bottom:24px">Connect wallet to see current prize</div>
     <button id="claim-btn" onclick="doClaim()" class="bp" style="font-size:12px;padding:14px 38px;opacity:.4;cursor:not-allowed;width:100%;max-width:300px;border-radius:8px" disabled>Claim BLD</button>
     <div id="claim-msg" style="margin-top:12px;font-size:12px;min-height:16px"></div>
+    <button id="finalize-btn" onclick="doFinalizePeriod()" class="bo" style="font-size:10px;padding:10px 20px;margin-top:16px;width:100%;max-width:300px;border-radius:8px;background:rgba(201,169,110,.15);border:1px solid rgba(201,169,110,.3);color:var(--gold)">Avanza il periodo prossimo →</button>
+    <div id="finalize-msg" style="margin-top:8px;font-size:11px;min-height:16px;color:var(--muted)">Advance to next period</div>
   </div>
 
   <div class="cl">Cycle 1 claims include 180-day linear vesting. Cycle 2 and Final Phase pay 100% immediately. Each wallet can claim exactly once.</div>
@@ -937,7 +939,7 @@ function sTab(id,btn){
 var AIRDROP_ADDRESS='0x61c35A27831AE981695442Ab42B88dEB0FcF17E7';
 var VAULT_ADDRESS='0x315C7Db81194805840220CAfA7fcd31B24f8C8Dd';
 var CHAIN_ID=1;
-var AIRDROP_ABI=['function claim() external','function withdrawVesting() external','function availableVesting(address wallet) external view returns (uint256)','function currentPeriodInfo() external view returns (uint8 phase, uint8 periodIndex, uint256 prize, uint256 mcapAvailable, uint256 walletsCount, uint256 periodStart, uint256 periodEnd, uint256 maxWallets, bool dustRuleActive)','function timeLeftInPeriod() external view returns (uint256)','function isWaitingForCycle2() external view returns (bool)'];
+var AIRDROP_ABI=['function claim() external','function withdrawVesting() external','function finalizePeriod() external','function availableVesting(address wallet) external view returns (uint256)','function currentPeriodInfo() external view returns (uint8 phase, uint8 periodIndex, uint256 prize, uint256 mcapAvailable, uint256 walletsCount, uint256 periodStart, uint256 periodEnd, uint256 maxWallets, bool dustRuleActive)','function timeLeftInPeriod() external view returns (uint256)','function isWaitingForCycle2() external view returns (bool)'];
 var VAULT_ABI=['function availableVesting() external view returns (uint256)','function vestingWithdrawn() external view returns (uint256)','function deployTime() external view returns (uint256)','function founder() external view returns (address)','function withdrawVesting() external'];
 var provider=null,signer=null,contract=null,userAddr=null,detectedWallets=[];
 
@@ -1108,6 +1110,14 @@ async function doWithdrawVesting(){
   var btn=document.getElementById('withdraw-btn');
   try{btn.textContent='Sending…';btn.disabled=true;var tx=await(new ethers.Contract(AIRDROP_ADDRESS,AIRDROP_ABI,signer)).withdrawVesting();btn.textContent='Confirming…';await tx.wait();document.getElementById('vest-avail-v').textContent='0 BLD';document.getElementById('vest-status-v').textContent='Withdrawn ✓';document.getElementById('vest-status-v').style.color='var(--green)';btn.textContent='Withdrawn ✓';enBtn('withdraw-btn',false);}
   catch(e){var m=e?.reason||e?.message||'Transaction failed';if(m.includes('user rejected'))m='Rejected.';alert('✗ '+m);btn.textContent='Withdraw Vesting';enBtn('withdraw-btn',true);}
+}
+
+async function doFinalizePeriod(){
+  if(!signer){openWalletModal();return;}
+  var btn=document.getElementById('finalize-btn');
+  var msg=document.getElementById('finalize-msg');
+  try{btn.textContent='Sending…';btn.disabled=true;msg.textContent='Waiting for wallet…';var tx=await(new ethers.Contract(AIRDROP_ADDRESS,AIRDROP_ABI,signer)).finalizePeriod();btn.textContent='Confirming…';msg.textContent='Transaction sent…';await tx.wait();msg.textContent='✓ Period finalized!';msg.style.color='var(--green)';btn.textContent='Finalized ✓';btn.disabled=true;await loadPeriodInfo();}
+  catch(e){var m=e?.reason||e?.message||'Transaction failed';if(m.includes('user rejected'))m='Rejected.';else if(m.includes('Period not ended'))m='Period not ended yet.';msg.textContent='✗ '+m;msg.style.color='var(--fp)';btn.textContent='Avanza il periodo prossimo →';btn.disabled=false;}
 }
 
 async function loadFounderVault(){
