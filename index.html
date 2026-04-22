@@ -588,7 +588,10 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
     <div class="wb">
       <div class="wn">11 YEARS</div>
       <div style="font-size:13px;color:var(--silver);margin-bottom:6px">347,126,472 seconds from deploy · Gregorian calendar</div>
-      <div style="font-size:11px;color:var(--muted)">Anyone calls <code style="color:var(--c1)">startCycle2()</code> after this threshold. All C1 remainders carry over.</div>
+      <div id="cycle2-countdown" style="font-size:18px;font-weight:600;color:var(--gold);margin:16px 0;font-family:var(--fd)">—</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:14px">Anyone can call <code style="color:var(--c1)">startCycle2()</code> when time is up. All C1 remainders carry over.</div>
+      <button id="startcycle2-btn" onclick="doStartCycle2()" class="bp" style="font-size:11px;padding:12px 28px;border-radius:8px;opacity:.4;cursor:not-allowed" disabled>Start Cycle 2 →</button>
+      <div id="startcycle2-msg" style="margin-top:10px;font-size:11px;min-height:16px;color:var(--muted)">Waiting for 11 years to elapse</div>
     </div>
   </div>
 
@@ -899,6 +902,7 @@ async function fetchNavPrice(){
 }
 fetchNavPrice();
 setInterval(fetchNavPrice,30000);
+setInterval(loadCycle2Countdown,60000);
 
 (function(){
   var n=document.getElementById('nav');
@@ -939,7 +943,7 @@ function sTab(id,btn){
 var AIRDROP_ADDRESS='0x61c35A27831AE981695442Ab42B88dEB0FcF17E7';
 var VAULT_ADDRESS='0x315C7Db81194805840220CAfA7fcd31B24f8C8Dd';
 var CHAIN_ID=1;
-var AIRDROP_ABI=['function claim() external','function withdrawVesting() external','function finalizePeriod() external','function availableVesting(address wallet) external view returns (uint256)','function currentPeriodInfo() external view returns (uint8 phase, uint8 periodIndex, uint256 prize, uint256 mcapAvailable, uint256 walletsCount, uint256 periodStart, uint256 periodEnd, uint256 maxWallets, bool dustRuleActive)','function timeLeftInPeriod() external view returns (uint256)','function isWaitingForCycle2() external view returns (bool)'];
+var AIRDROP_ABI=['function claim() external','function withdrawVesting() external','function finalizePeriod() external','function startCycle2() external','function availableVesting(address wallet) external view returns (uint256)','function currentPeriodInfo() external view returns (uint8 phase, uint8 periodIndex, uint256 prize, uint256 mcapAvailable, uint256 walletsCount, uint256 periodStart, uint256 periodEnd, uint256 maxWallets, bool dustRuleActive)','function timeLeftInPeriod() external view returns (uint256)','function isWaitingForCycle2() external view returns (bool)','function cycle2StartTime() external view returns (uint256)','function deployTime() external view returns (uint256)'];
 var VAULT_ABI=['function availableVesting() external view returns (uint256)','function vestingWithdrawn() external view returns (uint256)','function deployTime() external view returns (uint256)','function founder() external view returns (address)','function withdrawVesting() external'];
 var provider=null,signer=null,contract=null,userAddr=null,detectedWallets=[];
 
@@ -1014,7 +1018,7 @@ async function loadPeriodInfo(){
     var closed=Number(info.phase)===3;
     enBtn('claim-btn',!closed&&!wt&&signer!==null);
     if(closed)setMsg('Contract is permanently closed.','var(--muted)');
-    else if(wt)setMsg('Waiting for Cycle 2 — callable after 11 Gregorian years from deploy.','var(--silver)');
+    else if(wt){setMsg('Waiting for Cycle 2 — callable after 11 Gregorian years from deploy.','var(--silver)');await loadCycle2Countdown();}
   }catch(e){document.getElementById('pi-phase-v').textContent='Read error';}
 }
 
@@ -1120,6 +1124,46 @@ async function doFinalizePeriod(){
   catch(e){var m=e?.reason||e?.message||'Transaction failed';if(m.includes('user rejected'))m='Rejected.';else if(m.includes('Period not ended'))m='Period not ended yet.';msg.textContent='✗ '+m;msg.style.color='var(--fp)';btn.textContent='Finalize Period →';btn.disabled=false;}
 }
 
+async function doStartCycle2(){
+  if(!signer){openWalletModal();return;}
+  var btn=document.getElementById('startcycle2-btn');
+  var msg=document.getElementById('startcycle2-msg');
+  try{btn.textContent='Sending…';btn.disabled=true;msg.textContent='Waiting for wallet…';var tx=await(new ethers.Contract(AIRDROP_ADDRESS,AIRDROP_ABI,signer)).startCycle2();btn.textContent='Confirming…';msg.textContent='Transaction sent…';await tx.wait();msg.textContent='✓ Cycle 2 started!';msg.style.color='var(--green)';btn.textContent='Started ✓';btn.disabled=true;await loadPeriodInfo();}
+  catch(e){var m=e?.reason||e?.message||'Transaction failed';if(m.includes('user rejected'))m='Rejected.';else if(m.includes('too early'))m='Too early to start Cycle 2.';msg.textContent='✗ '+m;msg.style.color='var(--fp)';btn.textContent='Start Cycle 2 →';btn.disabled=false;}
+}
+
+async function loadCycle2Countdown(){
+  try{
+    var rp=new ethers.JsonRpcProvider('https://ethereum.publicnode.com');
+    var c=new ethers.Contract(AIRDROP_ADDRESS,AIRDROP_ABI,rp);
+    var deployTime=await c.deployTime();
+    var c2Start=await c.cycle2StartTime();
+    var now=Math.floor(Date.now()/1000);
+    var deploy=Number(deployTime);
+    var c2Time=Number(c2Start);
+    var C2_DELAY=347126472;
+    var targetTime=deploy+C2_DELAY;
+    var remaining=targetTime-now;
+    var cdEl=document.getElementById('cycle2-countdown');
+    var btn=document.getElementById('startcycle2-btn');
+    var msg=document.getElementById('startcycle2-msg');
+    if(remaining>0){
+      var y=Math.floor(remaining/31556952);
+      var d=Math.floor((remaining%31556952)/86400);
+      var h=Math.floor((remaining%86400)/3600);
+      var m=Math.floor((remaining%3600)/60);
+      cdEl.textContent=(y>0?y+'y ':'')+(d>0?d+'d ':'')+h+'h '+m+'m until Cycle 2';
+      enBtn('startcycle2-btn',false);
+      msg.textContent='Wait for countdown to reach zero';
+    }else{
+      cdEl.textContent='✓ Cycle 2 is ready to start!';
+      cdEl.style.color='var(--green)';
+      enBtn('startcycle2-btn',true);
+      msg.textContent='Click button to start Cycle 2';
+    }
+  }catch(e){document.getElementById('cycle2-countdown').textContent='—';}
+}
+
 async function loadFounderVault(){
   if(VAULT_ADDRESS.startsWith('['))return;
   try{
@@ -1159,6 +1203,7 @@ window.addEventListener('load',async function(){
     var rp=new ethers.JsonRpcProvider('https://ethereum.publicnode.com');
     if(!AIRDROP_ADDRESS.startsWith('[')){contract=new ethers.Contract(AIRDROP_ADDRESS,AIRDROP_ABI,rp);await loadPeriodInfo();await loadAirdropStats(); await highlightActivePeriod();}
     await loadFounderVault();
+    await loadCycle2Countdown();
   }catch(e){}
 });
 </script>
