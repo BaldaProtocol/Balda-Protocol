@@ -587,8 +587,9 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
   <div class="pp" id="pp-wt">
     <div class="wb">
       <div class="wn">11 YEARS</div>
+      <div style="font-size:33px;font-weight:600;color:var(--gold);margin-bottom:6px;font-family:var(--fd)" id="cycle2-countdown">—</div>
+      <div style="font-size:20px;color:var(--silver);margin-bottom:10px" id="cycle2-date">—</div>
       <div style="font-size:13px;color:var(--silver);margin-bottom:6px">347,126,472 seconds from deploy · Gregorian calendar</div>
-      <div id="cycle2-countdown" style="font-size:18px;font-weight:600;color:var(--gold);margin:16px 0;font-family:var(--fd)">—</div>
       <div style="font-size:11px;color:var(--muted);margin-bottom:14px">Anyone can call <code style="color:var(--c1)">startCycle2()</code> when time is up. All C1 remainders carry over.</div>
       <button id="startcycle2-btn" onclick="doStartCycle2()" class="bp" style="font-size:11px;padding:12px 28px;border-radius:8px;opacity:.4;cursor:not-allowed" disabled>Start Cycle 2 →</button>
       <div id="startcycle2-msg" style="margin-top:10px;font-size:11px;min-height:16px;color:var(--muted)">Waiting for 11 years to elapse</div>
@@ -1145,6 +1146,7 @@ async function loadCycle2Countdown(){
     var targetTime=deploy+C2_DELAY;
     var remaining=targetTime-now;
     var cdEl=document.getElementById('cycle2-countdown');
+    var dateEl=document.getElementById('cycle2-date');
     var btn=document.getElementById('startcycle2-btn');
     var msg=document.getElementById('startcycle2-msg');
     var fmtD=function(ts){return new Date(ts*1000).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});};
@@ -1153,12 +1155,14 @@ async function loadCycle2Countdown(){
       var d=Math.floor((remaining%31556952)/86400);
       var h=Math.floor((remaining%86400)/3600);
       var m=Math.floor((remaining%3600)/60);
-      cdEl.innerHTML=(y>0?y+'y ':'')+(d>0?d+'d ':'')+h+'h '+m+'m<div style="font-size:14px;color:var(--gold);margin-top:6px">'+fmtD(targetTime)+'</div>';
+      cdEl.textContent=(y>0?y+'y ':'')+(d>0?d+'d ':'')+h+'h '+m+'m';
+      dateEl.textContent=fmtD(targetTime);
       enBtn('startcycle2-btn',false);
       msg.textContent='Wait for countdown to reach zero';
     }else{
-      cdEl.innerHTML='✓ Cycle 2 is ready to start!<div style="font-size:14px;color:var(--green);margin-top:6px">'+fmtD(now*1000)+'</div>';
+      cdEl.textContent='✓ Ready!';
       cdEl.style.color='var(--green)';
+      dateEl.textContent=fmtD(now*1000);
       enBtn('startcycle2-btn',true);
       msg.textContent='Click button to start Cycle 2';
     }
