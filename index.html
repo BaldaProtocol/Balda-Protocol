@@ -587,9 +587,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
   <div class="pp" id="pp-wt">
     <div class="wb">
       <div class="wn">11 YEARS</div>
-      <div style="font-size:33px;font-weight:600;color:var(--gold);margin-bottom:6px;font-family:var(--fd)" id="cycle2-countdown">—</div>
-      <div style="font-size:20px;color:var(--silver);margin-bottom:10px" id="cycle2-date">—</div>
-      <div style="font-size:13px;color:var(--silver);margin-bottom:6px">347,126,472 seconds from deploy · Gregorian calendar</div>
+      <div style="font-size:33px;font-weight:600;color:var(--gold);margin-bottom:10px;font-family:var(--fd)" id="cycle2-date">—</div>
       <div style="font-size:11px;color:var(--muted);margin-bottom:14px">Anyone can call <code style="color:var(--c1)">startCycle2()</code> when time is up. All C1 remainders carry over.</div>
       <button id="startcycle2-btn" onclick="doStartCycle2()" class="bp" style="font-size:11px;padding:12px 28px;border-radius:8px;opacity:.4;cursor:not-allowed" disabled>Start Cycle 2 →</button>
       <div id="startcycle2-msg" style="margin-top:10px;font-size:11px;min-height:16px;color:var(--muted)">Waiting for 11 years to elapse</div>
@@ -903,7 +901,6 @@ async function fetchNavPrice(){
 }
 fetchNavPrice();
 setInterval(fetchNavPrice,30000);
-setInterval(loadCycle2Countdown,60000);
 
 (function(){
   var n=document.getElementById('nav');
@@ -1019,7 +1016,7 @@ async function loadPeriodInfo(){
     var closed=Number(info.phase)===3;
     enBtn('claim-btn',!closed&&!wt&&signer!==null);
     if(closed)setMsg('Contract is permanently closed.','var(--muted)');
-    else if(wt){setMsg('Waiting for Cycle 2 — callable after 11 Gregorian years from deploy.','var(--silver)');await loadCycle2Countdown();}
+    else if(wt){setMsg('Waiting for Cycle 2 — callable after 11 Gregorian years from deploy.','var(--silver)');}
   }catch(e){document.getElementById('pi-phase-v').textContent='Read error';}
 }
 
@@ -1138,35 +1135,25 @@ async function loadCycle2Countdown(){
     var rp=new ethers.JsonRpcProvider('https://ethereum.publicnode.com');
     var c=new ethers.Contract(AIRDROP_ADDRESS,AIRDROP_ABI,rp);
     var deployTime=await c.deployTime();
-    var c2Start=await c.cycle2StartTime();
     var now=Math.floor(Date.now()/1000);
     var deploy=Number(deployTime);
-    var c2Time=Number(c2Start);
     var C2_DELAY=347126472;
     var targetTime=deploy+C2_DELAY;
-    var remaining=targetTime-now;
-    var cdEl=document.getElementById('cycle2-countdown');
     var dateEl=document.getElementById('cycle2-date');
     var btn=document.getElementById('startcycle2-btn');
     var msg=document.getElementById('startcycle2-msg');
     var fmtD=function(ts){return new Date(ts*1000).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});};
-    if(remaining>0){
-      var y=Math.floor(remaining/31556952);
-      var d=Math.floor((remaining%31556952)/86400);
-      var h=Math.floor((remaining%86400)/3600);
-      var m=Math.floor((remaining%3600)/60);
-      cdEl.textContent=(y>0?y+'y ':'')+(d>0?d+'d ':'')+h+'h '+m+'m';
-      dateEl.textContent=fmtD(targetTime);
-      enBtn('startcycle2-btn',false);
-      msg.textContent='Wait for countdown to reach zero';
-    }else{
-      cdEl.textContent='✓ Ready!';
-      cdEl.style.color='var(--green)';
-      dateEl.textContent=fmtD(now*1000);
+    if(now>=targetTime){
+      dateEl.textContent='✓ Ready: '+fmtD(now*1000);
+      dateEl.style.color='var(--green)';
       enBtn('startcycle2-btn',true);
       msg.textContent='Click button to start Cycle 2';
+    }else{
+      dateEl.textContent=fmtD(targetTime);
+      enBtn('startcycle2-btn',false);
+      msg.textContent='Wait for date above';
     }
-  }catch(e){document.getElementById('cycle2-countdown').textContent='—';}
+  }catch(e){document.getElementById('cycle2-date').textContent='—';}
 }
 
 async function loadFounderVault(){
