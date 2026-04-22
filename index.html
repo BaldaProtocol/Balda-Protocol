@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+�n�s�9�g���m�sy��yV������x<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -729,7 +729,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
     <div id="claim-vesting-note" style="font-size:12px;color:var(--silver);margin-bottom:24px">Connect wallet to see current prize</div>
     <button id="claim-btn" onclick="doClaim()" class="bp" style="font-size:12px;padding:14px 38px;opacity:.4;cursor:not-allowed;width:100%;max-width:300px;border-radius:8px" disabled>Claim BLD</button>
     <div id="claim-msg" style="margin-top:12px;font-size:12px;min-height:16px"></div>
-    <button id="finalize-btn" onclick="doFinalizePeriod()" class="bo" style="font-size:10px;padding:10px 20px;margin-top:16px;width:100%;max-width:300px;border-radius:8px;background:rgba(201,169,110,.15);border:1px solid rgba(201,169,110,.3);color:var(--gold)">Avanza il periodo prossimo →</button>
+    <button id="finalize-btn" onclick="doFinalizePeriod()" class="bo" style="font-size:10px;padding:10px 20px;margin-top:16px;width:100%;max-width:300px;border-radius:8px;background:rgba(201,169,110,.15);border:1px solid rgba(201,169,110,.3);color:var(--gold)">Finalize Period →</button>
     <div id="finalize-msg" style="margin-top:8px;font-size:11px;min-height:16px;color:var(--muted)">Advance to next period</div>
   </div>
 
@@ -1117,7 +1117,7 @@ async function doFinalizePeriod(){
   var btn=document.getElementById('finalize-btn');
   var msg=document.getElementById('finalize-msg');
   try{btn.textContent='Sending…';btn.disabled=true;msg.textContent='Waiting for wallet…';var tx=await(new ethers.Contract(AIRDROP_ADDRESS,AIRDROP_ABI,signer)).finalizePeriod();btn.textContent='Confirming…';msg.textContent='Transaction sent…';await tx.wait();msg.textContent='✓ Period finalized!';msg.style.color='var(--green)';btn.textContent='Finalized ✓';btn.disabled=true;await loadPeriodInfo();}
-  catch(e){var m=e?.reason||e?.message||'Transaction failed';if(m.includes('user rejected'))m='Rejected.';else if(m.includes('Period not ended'))m='Period not ended yet.';msg.textContent='✗ '+m;msg.style.color='var(--fp)';btn.textContent='Avanza il periodo prossimo →';btn.disabled=false;}
+  catch(e){var m=e?.reason||e?.message||'Transaction failed';if(m.includes('user rejected'))m='Rejected.';else if(m.includes('Period not ended'))m='Period not ended yet.';msg.textContent='✗ '+m;msg.style.color='var(--fp)';btn.textContent='Finalize Period →';btn.disabled=false;}
 }
 
 async function loadFounderVault(){
