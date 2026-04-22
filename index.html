@@ -457,6 +457,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
       <div class="scard"><div class="sl">Decimals</div><div class="sv">18</div></div>
       <div class="scard"><div class="sl">Owner</div><div class="sv" style="font-size:15px;color:var(--fp)">None</div></div>
       <div class="scard"><div class="sl">Cycle 1 Vested</div><div class="sv" style="font-size:14px" id="hero-cycle1-vested">—</div></div>
+      <div class="scard"><div class="sl">Withdrawn</div><div class="sv" style="font-size:14px;color:var(--green)" id="hero-withdrawn">—</div></div>
     </div>
     <div class="hac">
       <a href="#airdrop" class="bp">Explore Airdrop</a>
@@ -1155,22 +1156,22 @@ async function loadHeroStats(){
   try{
     var rp=new ethers.JsonRpcProvider('https://ethereum.publicnode.com');
     var c=new ethers.Contract(AIRDROP_ADDRESS,AIRDROP_ABI,rp);
+    var vault=new ethers.Contract(VAULT_ADDRESS,VAULT_ABI,rp);
     var info=await c.currentPeriodInfo();
     var mcapAvailable=parseFloat(ethers.formatUnits(info.mcapAvailable,18));
     var totalAirdrop=70000;
     var claimed=totalAirdrop-mcapAvailable;
-    // Estimate vested based on time (180 days = 15552000 seconds)
-    var deployTime=await c.deployTime();
-    var now=Math.floor(Date.now()/1000);
-    var deploy=Number(deployTime);
+    // Get withdrawn from VaultCreator
+    var vestingWithdrawn=await vault.vestingWithdrawn();
+    var withdrawn=parseFloat(ethers.formatUnits(vestingWithdrawn,18));
+    // Estimate vested
+    var avgVestingDays=45;
     var VESTING_DURATION=15552000;
-    // Rough estimate: if many wallets claimed early, vesting accumulated
-    // Assume average vesting time for claimed tokens
-    var avgVestingDays=45; // rough average
     var vestingPct=Math.min(100,(avgVestingDays*86400/VESTING_DURATION)*100);
     var vested=claimed*(vestingPct/100);
     document.getElementById('hero-cycle1-vested').textContent=vested.toFixed(0)+' BLD';
-  }catch(e){console.error(e);document.getElementById('hero-cycle1-vested').textContent='—';}
+    document.getElementById('hero-withdrawn').textContent=withdrawn.toFixed(0)+' BLD';
+  }catch(e){console.error(e);document.getElementById('hero-cycle1-vested').textContent='—';document.getElementById('hero-withdrawn').textContent='—';}
 }
 
 async function loadVestingInfo(){
