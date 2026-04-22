@@ -1153,11 +1153,11 @@ async function loadCycle2Countdown(){
       var d=Math.floor((remaining%31556952)/86400);
       var h=Math.floor((remaining%86400)/3600);
       var m=Math.floor((remaining%3600)/60);
-      cdEl.innerHTML=(y>0?y+'y ':'')+(d>0?d+'d ':'')+h+'h '+m+'m until Cycle 2<div style="font-size:12px;color:var(--muted);margin-top:4px">Estimated: '+fmtD(targetTime)+'</div>';
+      cdEl.innerHTML=(y>0?y+'y ':'')+(d>0?d+'d ':'')+h+'h '+m+'m<div style="font-size:14px;color:var(--gold);margin-top:6px">'+fmtD(targetTime)+'</div>';
       enBtn('startcycle2-btn',false);
       msg.textContent='Wait for countdown to reach zero';
     }else{
-      cdEl.innerHTML='✓ Cycle 2 is ready to start!<div style="font-size:12px;color:var(--green);margin-top:4px">'+fmtD(now*1000)+'</div>';
+      cdEl.innerHTML='✓ Cycle 2 is ready to start!<div style="font-size:14px;color:var(--green);margin-top:6px">'+fmtD(now*1000)+'</div>';
       cdEl.style.color='var(--green)';
       enBtn('startcycle2-btn',true);
       msg.textContent='Click button to start Cycle 2';
