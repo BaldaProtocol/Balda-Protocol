@@ -812,7 +812,8 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
     
     <!-- Register Tranche -->
     <div id="tw-register-box" style="display:none">
-      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Register your tranche wallet (requires Flashbots/private tx):</div>
+      <div style="font-size:12px;color:var(--fp);margin-bottom:8px">⚠️ Use Flashbots RPC or private bundle to protect password from mempool</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Add Flashbots network in MetaMask: RPC URL: <code style="color:var(--silver)">https://rpc.flashbots.net/fast</code></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <input type="password" id="tw-password" placeholder="Password (keccak256)" style="flex:1;min-width:200px;padding:10px;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--text);font-size:12px">
         <button id="tw-register-btn" onclick="doRegisterTranche()" class="bp" style="font-size:11px;padding:10px 20px;border-radius:6px">Register →</button>
