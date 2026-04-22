@@ -456,7 +456,6 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
       <div class="scard"><div class="sl">Standard</div><div class="sv">ERC-20</div></div>
       <div class="scard"><div class="sl">Decimals</div><div class="sv">18</div></div>
       <div class="scard"><div class="sl">Owner</div><div class="sv" style="font-size:15px;color:var(--fp)">None</div></div>
-      <div class="scard"><div class="sl">Cycle 1 Vested</div><div class="sv" style="font-size:14px" id="hero-cycle1-vested">—</div></div>
     </div>
     <div class="hac">
       <a href="#airdrop" class="bp">Explore Airdrop</a>
@@ -1389,7 +1388,6 @@ window.addEventListener('load',async function(){
     await loadFounderVault();
     await loadCycle2Countdown();
     await loadTrancheWallet();
-    await loadHeroStats();
   }catch(e){}
 });
 </script>
