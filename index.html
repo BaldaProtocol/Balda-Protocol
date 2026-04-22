@@ -456,6 +456,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
       <div class="scard"><div class="sl">Standard</div><div class="sv">ERC-20</div></div>
       <div class="scard"><div class="sl">Decimals</div><div class="sv">18</div></div>
       <div class="scard"><div class="sl">Owner</div><div class="sv" style="font-size:15px;color:var(--fp)">None</div></div>
+      <div class="scard"><div class="sl">Cycle 1 Vested</div><div class="sv" style="font-size:14px" id="hero-cycle1-vested">—</div></div>
     </div>
     <div class="hac">
       <a href="#airdrop" class="bp">Explore Airdrop</a>
@@ -1150,6 +1151,31 @@ async function loadAirdropStats(){
   }catch(e){console.error('loadAirdropStats',e);}
 }
 
+async function loadHeroStats(){
+  try{
+    var rp=new ethers.JsonRpcProvider('https://ethereum.publicnode.com');
+    var c=new ethers.Contract(AIRDROP_ADDRESS,AIRDROP_ABI,rp);
+    var info=await c.currentPeriodInfo();
+    var wallets=Number(info.walletsCount);
+    var prize=info.prize;
+    var deployTime=await c.deployTime();
+    var now=Math.floor(Date.now()/1000);
+    var deploy=Number(deployTime);
+    var prizes=[111,55.5,27.75,13.875,6.9375,3.46875,1.734375,0.8671875];
+    var totalVested=0;
+    var VESTING_DURATION=15552000;
+    for(var p=0;p<8;p++){
+      var pStart=deploy+p*950400;
+      if(now>pStart){
+        var elapsed=Math.min(now-pStart,VESTING_DURATION);
+        var pct=elapsed/VESTING_DURATION;
+        totalVested+=prizes[p]*pct*wallets;
+      }
+    }
+    document.getElementById('hero-cycle1-vested').textContent=totalVested.toFixed(0)+' BLD';
+  }catch(e){document.getElementById('hero-cycle1-vested').textContent='—';}
+}
+
 async function loadVestingInfo(){
   if(!contract||!userAddr)return;
   try{var a=await contract.availableVesting(userAddr);var has=a>0n;document.getElementById('vest-avail-v').textContent=fmtBLD(a);document.getElementById('vest-status-v').textContent=has?'Ready to withdraw':'Nothing available';document.getElementById('vest-status-v').style.color=has?'var(--green)':'var(--muted)';enBtn('withdraw-btn',has&&signer!==null);}catch(e){}
@@ -1372,6 +1398,7 @@ window.addEventListener('load',async function(){
     await loadFounderVault();
     await loadCycle2Countdown();
     await loadTrancheWallet();
+    await loadHeroStats();
   }catch(e){}
 });
 </script>
