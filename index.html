@@ -795,6 +795,56 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
   </div>
 </div>
 </section>
+
+<!-- TRANCHE WALLET -->
+<section id="tranche-wallet" style="margin-top:40px">
+<div class="wp">
+  <div class="lbl"><div class="lbl-dot"></div><span>VaultCreator.sol — Tranche Wallet</span></div>
+  <h2 class="h2">Founder <span class="gtext">Tranches</span></h2>
+  <p class="intro">Register your tranche wallet with password. Then claim tranches after time lock (11, 22, 33 years).</p>
+
+  <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:clamp(18px,3vw,28px);margin-bottom:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+      <div style="font-family:var(--fd);font-size:15px">Tranche Wallet</div>
+      <div id="tw-status" style="font-size:11px;color:var(--muted)">Loading...</div>
+    </div>
+    <div id="tw-wallet" style="font-size:13px;color:var(--silver);word-break:break-all;margin-bottom:12px">—</div>
+    
+    <!-- Register Tranche -->
+    <div id="tw-register-box" style="display:none">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Register your tranche wallet (requires Flashbots/private tx):</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input type="password" id="tw-password" placeholder="Password (keccak256)" style="flex:1;min-width:200px;padding:10px;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--text);font-size:12px">
+        <button id="tw-register-btn" onclick="doRegisterTranche()" class="bp" style="font-size:11px;padding:10px 20px;border-radius:6px">Register →</button>
+      </div>
+      <div id="tw-register-msg" style="margin-top:8px;font-size:11px;color:var(--muted)"></div>
+    </div>
+  </div>
+
+  <!-- Tranche Timeline -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+    <div class="scard" style="text-align:center">
+      <div class="sl" style="font-size:10px">Tranche 1</div>
+      <div class="sv" style="font-size:14px;color:var(--gold)">2,500 BLD</div>
+      <div class="sv" style="font-size:11px" id="tw-t1-unlock">—</div>
+      <button id="tw-claim1-btn" onclick="doClaimTranche1()" style="margin-top:8px;font-size:10px;padding:6px 12px;border-radius:4px;opacity:.4;cursor:not-allowed" disabled>Claim</button>
+    </div>
+    <div class="scard" style="text-align:center">
+      <div class="sl" style="font-size:10px">Tranche 2</div>
+      <div class="sv" style="font-size:14px;color:var(--gold)">1,250 BLD</div>
+      <div class="sv" style="font-size:11px" id="tw-t2-unlock">—</div>
+      <button id="tw-claim2-btn" onclick="doClaimTranche(2)" style="margin-top:8px;font-size:10px;padding:6px 12px;border-radius:4px;opacity:.4;cursor:not-allowed" disabled>Claim</button>
+    </div>
+    <div class="scard" style="text-align:center">
+      <div class="sl" style="font-size:10px">Tranche 3</div>
+      <div class="sv" style="font-size:14px;color:var(--gold)">1,250 BLD</div>
+      <div class="sv" style="font-size:11px" id="tw-t3-unlock">—</div>
+      <button id="tw-claim3-btn" onclick="doClaimTranche(3)" style="margin-top:8px;font-size:10px;padding:6px 12px;border-radius:4px;opacity:.4;cursor:not-allowed" disabled>Claim</button>
+    </div>
+  </div>
+  <div id="tw-msg" style="font-size:12px;color:var(--muted);text-align:center"></div>
+</div>
+</section>
 <div class="dvd"></div>
 
 <!-- FOOTER -->
@@ -948,7 +998,7 @@ var AIRDROP_ADDRESS='0x61c35A27831AE981695442Ab42B88dEB0FcF17E7';
 var VAULT_ADDRESS='0x315C7Db81194805840220CAfA7fcd31B24f8C8Dd';
 var CHAIN_ID=1;
 var AIRDROP_ABI=['function claim() external','function withdrawVesting() external','function finalizePeriod() external','function startCycle2() external','function availableVesting(address wallet) external view returns (uint256)','function hasClaimed(address wallet) external view returns (bool)','function vestingOf(address wallet) external view returns (uint256 totalAmount, uint256 withdrawn, uint256 startTime, uint256 duration)','function currentPeriodInfo() external view returns (uint8 phase, uint8 periodIndex, uint256 prize, uint256 mcapAvailable, uint256 walletsCount, uint256 periodStart, uint256 periodEnd, uint256 maxWallets, bool dustRuleActive)','function timeLeftInPeriod() external view returns (uint256)','function isWaitingForCycle2() external view returns (bool)','function cycle2StartTime() external view returns (uint256)','function deployTime() external view returns (uint256)'];
-var VAULT_ABI=['function availableVesting() external view returns (uint256)','function vestingWithdrawn() external view returns (uint256)','function deployTime() external view returns (uint256)','function founder() external view returns (address)','function withdrawVesting() external'];
+var VAULT_ABI=['function availableVesting() external view returns (uint256)','function vestingWithdrawn() external view returns (uint256)','function deployTime() external view returns (uint256)','function founder() external view returns (address)','function withdrawVesting() external','function trancheWallet() external view returns (address)','function trancheUnlockAt(uint8 trancheId) external view returns (uint256)','function registerTrancheWallet(string calldata password) external','function claimTranche1() external','function claimTranche(uint8 trancheId) external'];
 var provider=null,signer=null,contract=null,userAddr=null,detectedWallets=[];
 
 window.addEventListener('eip6963:announceProvider',function(e){var d=e.detail;if(!detectedWallets.find(function(w){return w.info.rdns===d.info.rdns;}))detectedWallets.push(d);});
@@ -993,7 +1043,7 @@ async function connectWith(w){
     document.getElementById('wallet-addr').style.color='var(--text)';
     document.getElementById('wallet-addr').textContent=w.info.name+' · '+userAddr.slice(0,6)+'…'+userAddr.slice(-4);
     var cb=document.getElementById('connect-btn');cb.textContent='Connected';cb.style.opacity='.5';cb.style.cursor='default';cb.onclick=null;
-    await loadPeriodInfo();await loadAirdropStats(); await highlightActivePeriod();await loadVestingInfo();await loadClaimedPeriods();await loadFounderVault();
+    await loadPeriodInfo();await loadAirdropStats(); await highlightActivePeriod();await loadVestingInfo();await loadClaimedPeriods();await loadFounderVault();await loadTrancheWallet();
     if(w.provider.on){w.provider.on('accountsChanged',function(a){if(!a||!a.length)location.reload();else connectWith(w);});w.provider.on('chainChanged',function(){location.reload();});}
   }catch(e){if(!String(e?.message).includes('rejected'))alert('Connection failed: '+(e?.message||e));}
 }
@@ -1234,12 +1284,95 @@ async function fvWithdraw(){
   catch(e){var m=e?.reason||e?.message||'Transaction failed';if(m.includes('user rejected'))m='Rejected.';msg.textContent='✗ '+m;msg.style.color='var(--fp)';btn.textContent='Withdraw Available BLD';enBtn('fv-withdraw-btn',true);}
 }
 
+async function loadTrancheWallet(){
+  if(VAULT_ADDRESS.startsWith('['))return;
+  try{
+    var rp=new ethers.JsonRpcProvider('https://ethereum.publicnode.com');
+    var vault=new ethers.Contract(VAULT_ADDRESS,VAULT_ABI,rp);
+    var tw=await vault.trancheWallet();
+    var now=Math.floor(Date.now()/1000);
+    var deployTime=await vault.deployTime();
+    var deploy=Number(deployTime);
+    var fmtD=function(ts){return new Date(ts*1000).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});};
+    
+    document.getElementById('tw-wallet').textContent=tw!=='0x0000000000000000000000000000000000000000'?tw:'Not registered';
+    document.getElementById('tw-status').textContent=tw!=='0x0000000000000000000000000000000000000000'?'✓ Registered':'Not set';
+    document.getElementById('tw-status').style.color=tw!=='0x0000000000000000000000000000000000000000'?'var(--green)':'var(--muted)';
+    
+    // Show register box if not registered
+    document.getElementById('tw-register-box').style.display=tw==='0x0000000000000000000000000000000000000000'?'block':'none';
+    
+    // Check tranche unlocks
+    var t1=deploy+347126472;
+    var t2=deploy+694252944;
+    var t3=deploy+1041379416;
+    document.getElementById('tw-t1-unlock').textContent=now>=t1?'✓ Unlocked':'~'+fmtD(t1);
+    document.getElementById('tw-t2-unlock').textContent=now>=t2?'✓ Unlocked':'~'+fmtD(t2);
+    document.getElementById('tw-t3-unlock').textContent=now>=t3?'✓ Unlocked':'~'+fmtD(t3);
+    document.getElementById('tw-t1-unlock').style.color=now>=t1?'var(--green)':'var(--muted)';
+    document.getElementById('tw-t2-unlock').style.color=now>=t2?'var(--green)':'var(--muted)';
+    document.getElementById('tw-t3-unlock').style.color=now>=t3?'var(--green)':'var(--muted)';
+    
+    // Enable buttons if wallet connected and correct
+    if(signer && userAddr){
+      var isTW=tw && tw.toLowerCase()===userAddr.toLowerCase();
+      enBtn('tw-claim1-btn',isTW && now>=t1);
+      enBtn('tw-claim2-btn',isTW && now>=t2);
+      enBtn('tw-claim3-btn',isTW && now>=t3);
+    }
+  }catch(e){console.error('loadTrancheWallet',e);}
+}
+
+async function doRegisterTranche(){
+  if(!signer){openWalletModal();return;}
+  var btn=document.getElementById('tw-register-btn');
+  var msg=document.getElementById('tw-register-msg');
+  var pwd=document.getElementById('tw-password').value;
+  if(!pwd){msg.textContent='Enter password';msg.style.color='var(--fp)';return;}
+  try{
+    btn.textContent='Sending…';btn.disabled=true;msg.textContent='Use Flashbots/private tx to protect password…';msg.style.color='var(--silver)';
+    var tx=await(new ethers.Contract(VAULT_ADDRESS,VAULT_ABI,signer)).registerTrancheWallet(pwd);
+    btn.textContent='Confirming…';await tx.wait();
+    msg.textContent='✓ Wallet registered!';msg.style.color='var(--green)';btn.textContent='Registered ✓';btn.disabled=true;
+    await loadTrancheWallet();
+  }catch(e){
+    var m=e?.reason||e?.message||'Failed';if(m.includes('incorrect password'))m='Incorrect password';msg.textContent='✗ '+m;msg.style.color='var(--fp)';
+    btn.textContent='Register →';btn.disabled=false;
+  }
+}
+
+async function doClaimTranche1(){
+  if(!signer){openWalletModal();return;}
+  var msg=document.getElementById('tw-msg');
+  try{
+    enBtn('tw-claim1-btn',false);msg.textContent='Sending…';msg.style.color='var(--silver)';
+    var tx=await(new ethers.Contract(VAULT_ADDRESS,VAULT_ABI,signer)).claimTranche1();
+    await tx.wait();
+    msg.textContent='✓ Tranche 1 claimed! (2,500 BLD)';msg.style.color='var(--green)';
+    enBtn('tw-claim1-btn',false);document.getElementById('tw-claim1-btn').textContent='Claimed ✓';
+  }catch(e){msg.textContent='✗ '+(e?.reason||e?.message||'Failed');msg.style.color='var(--fp)';enBtn('tw-claim1-btn',true);}
+}
+
+async function doClaimTranche(id){
+  if(!signer){openWalletModal();return;}
+  var msg=document.getElementById('tw-msg');
+  var amt=id==2?'1,250':'1,250';
+  try{
+    enBtn('tw-claim'+id+'-btn',false);msg.textContent='Sending…';msg.style.color='var(--silver)';
+    var tx=await(new ethers.Contract(VAULT_ADDRESS,VAULT_ABI,signer)).claimTranche(id);
+    await tx.wait();
+    msg.textContent='✓ Tranche '+id+' claimed! ('+amt+' BLD)';msg.style.color='var(--green)';
+    enBtn('tw-claim'+id+'-btn',false);document.getElementById('tw-claim'+id+'-btn').textContent='Claimed ✓';
+  }catch(e){msg.textContent='✗ '+(e?.reason||e?.message||'Failed');msg.style.color='var(--fp)';enBtn('tw-claim'+id+'-btn',true);}
+}
+
 window.addEventListener('load',async function(){
   try{
     var rp=new ethers.JsonRpcProvider('https://ethereum.publicnode.com');
     if(!AIRDROP_ADDRESS.startsWith('[')){contract=new ethers.Contract(AIRDROP_ADDRESS,AIRDROP_ABI,rp);await loadPeriodInfo();await loadAirdropStats(); await highlightActivePeriod();}
     await loadFounderVault();
     await loadCycle2Countdown();
+    await loadTrancheWallet();
   }catch(e){}
 });
 </script>
