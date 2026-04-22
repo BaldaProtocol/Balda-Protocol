@@ -695,11 +695,8 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
     </div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-bottom:12px">
       <div class="scard"><div class="sl">Wallets Claimed</div><div class="sv" style="font-size:15px" id="stats-wallets">—</div></div>
-      <div class="scard"><div class="sl">Total Claimed</div><div class="sv" style="font-size:13px" id="stats-total-claimed">—</div></div>
-      <div class="scard"><div class="sl">Remaining</div><div class="sv" style="font-size:13px;color:var(--gold)" id="stats-remaining">—</div></div>
-      <div class="scard"><div class="sl">In Vesting</div><div class="sv" style="font-size:13px" id="stats-in-vesting">—</div></div>
-      <div class="scard"><div class="sl">Released</div><div class="sv" style="font-size:13px;color:var(--green)" id="stats-released">—</div></div>
-      <div class="scard"><div class="sl">Next Period</div><div class="sv" style="font-size:13px" id="stats-next-period">—</div></div>
+      <div class="scard"><div class="sl">BLD in Vesting</div><div class="sv" style="font-size:13px" id="stats-in-vesting">—</div></div>
+      <div class="scard"><div class="sl">BLD Released</div><div class="sv" style="font-size:13px;color:var(--green)" id="stats-released">—</div></div>
     </div>
     <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
       <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:8px">
@@ -1132,31 +1129,19 @@ async function loadAirdropStats(){
     var info=await c.currentPeriodInfo();
     var wallets=Number(info.walletsCount);
     var prize=info.prize;
-    var mcapAvailable=info.mcapAvailable;
     var periodStart=Number(info.periodStart);
-    var periodEnd=Number(info.periodEnd);
     var VESTING_DURATION=15552000;
     var now=Math.floor(Date.now()/1000);
     var elapsed=Math.max(0,now-periodStart);
     var vestingPct=Math.min(100,(elapsed/VESTING_DURATION)*100);
-    var prizeEth=parseFloat(ethers.formatUnits(prize,18));
-    var totalVesting=prizeEth*wallets;
+    var totalVesting=parseFloat(ethers.formatUnits(prize,18))*wallets;
     var released=totalVesting*(vestingPct/100);
     var inVesting=totalVesting-released;
-    var totalClaimed=released+inVesting;
-    var remaining=parseFloat(ethers.formatUnits(mcapAvailable,18));
     var maxW=Number(info.maxWallets);
     var maxStr=maxW>=1e18?'∞':maxW.toString();
-    var timeLeft=periodEnd>now?periodEnd-now:0;
-    var d=Math.floor(timeLeft/86400);
-    var h=Math.floor((timeLeft%86400)/3600);
-    var nextStr=timeLeft>0?(d>0?d+'d ':'')+h+'h':'Active';
     document.getElementById('stats-wallets').textContent=wallets+' / '+maxStr;
-    document.getElementById('stats-total-claimed').textContent=totalClaimed.toFixed(4)+' BLD';
-    document.getElementById('stats-remaining').textContent=remaining.toFixed(4)+' BLD';
     document.getElementById('stats-in-vesting').textContent=inVesting.toFixed(4)+' BLD';
     document.getElementById('stats-released').textContent=released.toFixed(4)+' BLD';
-    document.getElementById('stats-next-period').textContent=nextStr;
     document.getElementById('stats-vesting-bar').style.width=vestingPct.toFixed(2)+'%';
     document.getElementById('stats-vesting-pct').textContent=vestingPct.toFixed(2)+'%';
     var fmtD=function(ts){return new Date(ts*1000).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});};
