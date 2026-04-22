@@ -1156,24 +1156,21 @@ async function loadHeroStats(){
     var rp=new ethers.JsonRpcProvider('https://ethereum.publicnode.com');
     var c=new ethers.Contract(AIRDROP_ADDRESS,AIRDROP_ABI,rp);
     var info=await c.currentPeriodInfo();
-    var wallets=Number(info.walletsCount);
-    var prize=info.prize;
+    var mcapAvailable=parseFloat(ethers.formatUnits(info.mcapAvailable,18));
+    var totalAirdrop=70000;
+    var claimed=totalAirdrop-mcapAvailable;
+    // Estimate vested based on time (180 days = 15552000 seconds)
     var deployTime=await c.deployTime();
     var now=Math.floor(Date.now()/1000);
     var deploy=Number(deployTime);
-    var prizes=[111,55.5,27.75,13.875,6.9375,3.46875,1.734375,0.8671875];
-    var totalVested=0;
     var VESTING_DURATION=15552000;
-    for(var p=0;p<8;p++){
-      var pStart=deploy+p*950400;
-      if(now>pStart){
-        var elapsed=Math.min(now-pStart,VESTING_DURATION);
-        var pct=elapsed/VESTING_DURATION;
-        totalVested+=prizes[p]*pct*wallets;
-      }
-    }
-    document.getElementById('hero-cycle1-vested').textContent=totalVested.toFixed(0)+' BLD';
-  }catch(e){document.getElementById('hero-cycle1-vested').textContent='—';}
+    // Rough estimate: if many wallets claimed early, vesting accumulated
+    // Assume average vesting time for claimed tokens
+    var avgVestingDays=45; // rough average
+    var vestingPct=Math.min(100,(avgVestingDays*86400/VESTING_DURATION)*100);
+    var vested=claimed*(vestingPct/100);
+    document.getElementById('hero-cycle1-vested').textContent=vested.toFixed(0)+' BLD';
+  }catch(e){console.error(e);document.getElementById('hero-cycle1-vested').textContent='—';}
 }
 
 async function loadVestingInfo(){
