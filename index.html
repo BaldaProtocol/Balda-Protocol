@@ -1161,16 +1161,20 @@ async function loadHeroStats(){
     var mcapAvailable=parseFloat(ethers.formatUnits(info.mcapAvailable,18));
     var totalAirdrop=70000;
     var claimed=totalAirdrop-mcapAvailable;
-    // Get withdrawn from VaultCreator
+    // Get withdrawn from VaultCreator (founder)
     var vestingWithdrawn=await vault.vestingWithdrawn();
-    var withdrawn=parseFloat(ethers.formatUnits(vestingWithdrawn,18));
-    // Estimate vested
+    var founderWithdrawn=parseFloat(ethers.formatUnits(vestingWithdrawn,18));
+    // Estimate airdrop withdrawals from claimed - remaining in vesting
+    // Total claimed has some in vesting, some already withdrawn
     var avgVestingDays=45;
     var VESTING_DURATION=15552000;
     var vestingPct=Math.min(100,(avgVestingDays*86400/VESTING_DURATION)*100);
+    var totalVesting=claimed*(vestingPct/100);
+    var airdropWithdrawn=claimed-totalVesting;
+    var totalWithdrawn=founderWithdrawn+airdropWithdrawn;
     var vested=claimed*(vestingPct/100);
     document.getElementById('hero-cycle1-vested').textContent=vested.toFixed(0)+' BLD';
-    document.getElementById('hero-withdrawn').textContent=withdrawn.toFixed(0)+' BLD';
+    document.getElementById('hero-withdrawn').textContent=totalWithdrawn.toFixed(0)+' BLD';
   }catch(e){console.error(e);document.getElementById('hero-cycle1-vested').textContent='—';document.getElementById('hero-withdrawn').textContent='—';}
 }
 
