@@ -1156,26 +1156,20 @@ async function loadHeroStats(){
   try{
     var rp=new ethers.JsonRpcProvider('https://ethereum.publicnode.com');
     var c=new ethers.Contract(AIRDROP_ADDRESS,AIRDROP_ABI,rp);
-    var vault=new ethers.Contract(VAULT_ADDRESS,VAULT_ABI,rp);
     var info=await c.currentPeriodInfo();
     var mcapAvailable=parseFloat(ethers.formatUnits(info.mcapAvailable,18));
     var totalAirdrop=70000;
-    var claimed=totalAirdrop-mcapAvailable;
-    // Get founder withdrawn (exact from contract)
-    var vestingWithdrawn=await vault.vestingWithdrawn();
-    var founderWithdrawn=parseFloat(ethers.formatUnits(vestingWithdrawn,18));
-    // Airdrop: what's been claimed - what's still in vesting = what's released
-    // This is approximate based on average vesting time
+    // Solo claim airdrop (esclude founder)
+    var airdropClaimed=totalAirdrop-mcapAvailable;
+    // Stima vesting
     var avgVestingDays=45;
     var VESTING_DURATION=15552000;
     var vestingPct=Math.min(100,(avgVestingDays*86400/VESTING_DURATION)*100);
-    var airdropInVesting=claimed*vestingPct/100;
-    var airdropReleased=claimed-airdropInVesting;
-    // Total = founder withdrawn + airdrop released
-    var totalWithdrawn=founderWithdrawn+airdropReleased;
-    var vested=claimed*(vestingPct/100);
+    var airdropInVesting=airdropClaimed*vestingPct/100;
+    var airdropReleased=airdropClaimed-airdropInVesting;
+    var vested=airdropClaimed*(vestingPct/100);
     document.getElementById('hero-cycle1-vested').textContent=vested.toFixed(0)+' BLD';
-    document.getElementById('hero-withdrawn').textContent=totalWithdrawn.toFixed(0)+' BLD';
+    document.getElementById('hero-withdrawn').textContent=airdropReleased.toFixed(0)+' BLD';
   }catch(e){console.error(e);document.getElementById('hero-cycle1-vested').textContent='—';document.getElementById('hero-withdrawn').textContent='—';}
 }
 
