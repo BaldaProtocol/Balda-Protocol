@@ -723,6 +723,12 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
     <button id="withdraw-btn" onclick="doWithdrawVesting()" class="bo" style="width:100%;padding:12px;text-align:center;font-size:11px;letter-spacing:.1em;border-radius:8px;opacity:.4;cursor:not-allowed" disabled>Withdraw Vesting</button>
   </div>
 
+  <!-- YOUR CLAIMED PERIODS -->
+  <div id="your-claimed-periods" style="margin-bottom:20px;display:none">
+    <div class="lbl" style="margin-bottom:10px"><div class="lbl-dot"></div><span>Your Claimed Periods</span></div>
+    <div id="claimed-periods-list" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+
   <!-- CLAIM BOX -->
   <div style="background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.2);border-radius:14px;padding:clamp(22px,4vw,40px);text-align:center;position:relative;overflow:hidden;margin-bottom:14px">
     <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(124,58,237,.12),transparent 65%);pointer-events:none"></div>
@@ -987,7 +993,7 @@ async function connectWith(w){
     document.getElementById('wallet-addr').style.color='var(--text)';
     document.getElementById('wallet-addr').textContent=w.info.name+' · '+userAddr.slice(0,6)+'…'+userAddr.slice(-4);
     var cb=document.getElementById('connect-btn');cb.textContent='Connected';cb.style.opacity='.5';cb.style.cursor='default';cb.onclick=null;
-    await loadPeriodInfo();await loadAirdropStats(); await highlightActivePeriod();await loadVestingInfo();await loadFounderVault();
+    await loadPeriodInfo();await loadAirdropStats(); await highlightActivePeriod();await loadVestingInfo();await loadClaimedPeriods();await loadFounderVault();
     if(w.provider.on){w.provider.on('accountsChanged',function(a){if(!a||!a.length)location.reload();else connectWith(w);});w.provider.on('chainChanged',function(){location.reload();});}
   }catch(e){if(!String(e?.message).includes('rejected'))alert('Connection failed: '+(e?.message||e));}
 }
@@ -1100,10 +1106,47 @@ async function loadVestingInfo(){
   try{var a=await contract.availableVesting(userAddr);var has=a>0n;document.getElementById('vest-avail-v').textContent=fmtBLD(a);document.getElementById('vest-status-v').textContent=has?'Ready to withdraw':'Nothing available';document.getElementById('vest-status-v').style.color=has?'var(--green)':'var(--muted)';enBtn('withdraw-btn',has&&signer!==null);}catch(e){}
 }
 
+async function loadClaimedPeriods(){
+  if(!contract||!userAddr)return;
+  try{
+    var rp=new ethers.JsonRpcProvider('https://ethereum.publicnode.com');
+    var c=new ethers.Contract(AIRDROP_ADDRESS,AIRDROP_ABI,rp);
+    var info=await c.currentPeriodInfo();
+    var currentPhase=Number(info.phase);
+    var currentPeriod=Number(info.periodIndex);
+    var VESTING_DURATION=15552000;
+    var now=Math.floor(Date.now()/1000);
+    var container=document.getElementById('your-claimed-periods');
+    var list=document.getElementById('claimed-periods-list');
+    var hasClaimedAny=false;
+    list.innerHTML='';
+    if(currentPhase===0){
+      var prizes=[111,55.5,27.75,13.875,6.9375,3.46875,1.734375,0.8671875];
+      for(var p=0;p<=Math.min(currentPeriod,7);p++){
+        var periodStart=Number(info.periodStart);
+        var deployTime=await c.deployTime();
+        var pStart=Number(deployTime)+p*950400;
+        var elapsed=Math.max(0,now-pStart);
+        var pct=Math.min(100,(elapsed/VESTING_DURATION)*100);
+        var days=Math.floor(elapsed/86400);
+        var vested=pct>=100;
+        hasClaimedAny=true;
+        var row=document.createElement('div');
+        row.style.cssText='background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:11px';
+        row.innerHTML='<div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:var(--gold)">C1 · P'+(p+1)+'</span><span>'+prizes[p]+' BLD</span></div>'+
+          '<div style="background:rgba(255,255,255,.1);height:5px;border-radius:4px;overflow:hidden;margin-bottom:4px"><div style="height:100%;width:'+pct.toFixed(1)+'%;background:linear-gradient(90deg,var(--v1),var(--b1));border-radius:4px"></div></div>'+
+          '<div style="color:'+(vested?'var(--green)':'var(--muted)')+'">'+(vested?'✓ Vested':pct.toFixed(0)+'% ('+days+' days)')+'</div>';
+        list.appendChild(row);
+      }
+    }
+    container.style.display=hasClaimedAny?'block':'none';
+  }catch(e){console.error('loadClaimedPeriods',e);}
+}
+
 async function doClaim(){
   if(!signer){openWalletModal();return;}
   var btn=document.getElementById('claim-btn');
-  try{btn.textContent='Sending…';btn.disabled=true;setMsg('Waiting for wallet…','var(--silver)');var tx=await(new ethers.Contract(AIRDROP_ADDRESS,AIRDROP_ABI,signer)).claim();btn.textContent='Confirming…';setMsg('Transaction sent…','var(--silver)');var rx=await tx.wait();setMsg('✓ Claimed! Tx: '+rx.hash.slice(0,10)+'…','var(--green)');btn.textContent='Claimed ✓';enBtn('claim-btn',false);await loadPeriodInfo();await loadVestingInfo();}
+  try{btn.textContent='Sending…';btn.disabled=true;setMsg('Waiting for wallet…','var(--silver)');var tx=await(new ethers.Contract(AIRDROP_ADDRESS,AIRDROP_ABI,signer)).claim();btn.textContent='Confirming…';setMsg('Transaction sent…','var(--silver)');var rx=await tx.wait();setMsg('✓ Claimed! Tx: '+rx.hash.slice(0,10)+'…','var(--green)');btn.textContent='Claimed ✓';enBtn('claim-btn',false);await loadPeriodInfo();await loadVestingInfo();await loadClaimedPeriods();}
   catch(e){var m=e?.reason||e?.message||'Transaction failed';if(m.includes('AlreadyClaimed'))m='This wallet has already claimed.';else if(m.includes('ContractClosed'))m='Contract is closed.';else if(m.includes('user rejected'))m='Rejected.';setMsg('✗ '+m,'var(--fp)');btn.textContent='Claim BLD';enBtn('claim-btn',true);}
 }
 
