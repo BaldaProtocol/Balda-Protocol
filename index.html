@@ -1147,16 +1147,17 @@ async function loadCycle2Countdown(){
     var cdEl=document.getElementById('cycle2-countdown');
     var btn=document.getElementById('startcycle2-btn');
     var msg=document.getElementById('startcycle2-msg');
+    var fmtD=function(ts){return new Date(ts*1000).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});};
     if(remaining>0){
       var y=Math.floor(remaining/31556952);
       var d=Math.floor((remaining%31556952)/86400);
       var h=Math.floor((remaining%86400)/3600);
       var m=Math.floor((remaining%3600)/60);
-      cdEl.textContent=(y>0?y+'y ':'')+(d>0?d+'d ':'')+h+'h '+m+'m until Cycle 2';
+      cdEl.innerHTML=(y>0?y+'y ':'')+(d>0?d+'d ':'')+h+'h '+m+'m until Cycle 2<div style="font-size:12px;color:var(--muted);margin-top:4px">Estimated: '+fmtD(targetTime)+'</div>';
       enBtn('startcycle2-btn',false);
       msg.textContent='Wait for countdown to reach zero';
     }else{
-      cdEl.textContent='✓ Cycle 2 is ready to start!';
+      cdEl.innerHTML='✓ Cycle 2 is ready to start!<div style="font-size:12px;color:var(--green);margin-top:4px">'+fmtD(now*1000)+'</div>';
       cdEl.style.color='var(--green)';
       enBtn('startcycle2-btn',true);
       msg.textContent='Click button to start Cycle 2';
