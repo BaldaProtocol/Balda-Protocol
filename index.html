@@ -947,7 +947,7 @@ function sTab(id,btn){
 var AIRDROP_ADDRESS='0x61c35A27831AE981695442Ab42B88dEB0FcF17E7';
 var VAULT_ADDRESS='0x315C7Db81194805840220CAfA7fcd31B24f8C8Dd';
 var CHAIN_ID=1;
-var AIRDROP_ABI=['function claim() external','function withdrawVesting() external','function finalizePeriod() external','function startCycle2() external','function availableVesting(address wallet) external view returns (uint256)','function currentPeriodInfo() external view returns (uint8 phase, uint8 periodIndex, uint256 prize, uint256 mcapAvailable, uint256 walletsCount, uint256 periodStart, uint256 periodEnd, uint256 maxWallets, bool dustRuleActive)','function timeLeftInPeriod() external view returns (uint256)','function isWaitingForCycle2() external view returns (bool)','function cycle2StartTime() external view returns (uint256)','function deployTime() external view returns (uint256)'];
+var AIRDROP_ABI=['function claim() external','function withdrawVesting() external','function finalizePeriod() external','function startCycle2() external','function availableVesting(address wallet) external view returns (uint256)','function hasClaimed(address wallet) external view returns (bool)','function vestingOf(address wallet) external view returns (uint256 totalAmount, uint256 withdrawn, uint256 startTime, uint256 duration)','function currentPeriodInfo() external view returns (uint8 phase, uint8 periodIndex, uint256 prize, uint256 mcapAvailable, uint256 walletsCount, uint256 periodStart, uint256 periodEnd, uint256 maxWallets, bool dustRuleActive)','function timeLeftInPeriod() external view returns (uint256)','function isWaitingForCycle2() external view returns (bool)','function cycle2StartTime() external view returns (uint256)','function deployTime() external view returns (uint256)'];
 var VAULT_ABI=['function availableVesting() external view returns (uint256)','function vestingWithdrawn() external view returns (uint256)','function deployTime() external view returns (uint256)','function founder() external view returns (address)','function withdrawVesting() external'];
 var provider=null,signer=null,contract=null,userAddr=null,detectedWallets=[];
 
@@ -1111,35 +1111,36 @@ async function loadClaimedPeriods(){
   try{
     var rp=new ethers.JsonRpcProvider('https://ethereum.publicnode.com');
     var c=new ethers.Contract(AIRDROP_ADDRESS,AIRDROP_ABI,rp);
+    var hasClaimed=await c.hasClaimed(userAddr);
+    var container=document.getElementById('your-claimed-periods');
+    var list=document.getElementById('claimed-periods-list');
+    list.innerHTML='';
+    if(!hasClaimed){
+      container.style.display='none';
+      return;
+    }
     var info=await c.currentPeriodInfo();
     var currentPhase=Number(info.phase);
     var currentPeriod=Number(info.periodIndex);
+    var deployTime=await c.deployTime();
     var VESTING_DURATION=15552000;
     var now=Math.floor(Date.now()/1000);
-    var container=document.getElementById('your-claimed-periods');
-    var list=document.getElementById('claimed-periods-list');
-    var hasClaimedAny=false;
-    list.innerHTML='';
-    if(currentPhase===0){
-      var prizes=[111,55.5,27.75,13.875,6.9375,3.46875,1.734375,0.8671875];
-      for(var p=0;p<=Math.min(currentPeriod,7);p++){
-        var periodStart=Number(info.periodStart);
-        var deployTime=await c.deployTime();
-        var pStart=Number(deployTime)+p*950400;
-        var elapsed=Math.max(0,now-pStart);
-        var pct=Math.min(100,(elapsed/VESTING_DURATION)*100);
-        var days=Math.floor(elapsed/86400);
-        var vested=pct>=100;
-        hasClaimedAny=true;
-        var row=document.createElement('div');
-        row.style.cssText='background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:11px';
-        row.innerHTML='<div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:var(--gold)">C1 · P'+(p+1)+'</span><span>'+prizes[p]+' BLD</span></div>'+
-          '<div style="background:rgba(255,255,255,.1);height:5px;border-radius:4px;overflow:hidden;margin-bottom:4px"><div style="height:100%;width:'+pct.toFixed(1)+'%;background:linear-gradient(90deg,var(--v1),var(--b1));border-radius:4px"></div></div>'+
-          '<div style="color:'+(vested?'var(--green)':'var(--muted)')+'">'+(vested?'✓ Vested':pct.toFixed(0)+'% ('+days+' days)')+'</div>';
-        list.appendChild(row);
-      }
+    var prizes=[111,55.5,27.75,13.875,6.9375,3.46875,1.734375,0.8671875];
+    var periodsToShow=currentPhase===0?currentPeriod+1:(currentPhase===1?8:0);
+    for(var p=0;p<periodsToShow;p++){
+      var pStart=Number(deployTime)+p*950400;
+      var elapsed=Math.max(0,now-pStart);
+      var pct=Math.min(100,(elapsed/VESTING_DURATION)*100);
+      var days=Math.floor(elapsed/86400);
+      var vested=pct>=100;
+      var row=document.createElement('div');
+      row.style.cssText='background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:11px';
+      row.innerHTML='<div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:var(--gold)">C1 · P'+(p+1)+'</span><span>'+prizes[p]+' BLD</span></div>'+
+        '<div style="background:rgba(255,255,255,.1);height:5px;border-radius:4px;overflow:hidden;margin-bottom:4px"><div style="height:100%;width:'+pct.toFixed(1)+'%;background:linear-gradient(90deg,var(--v1),var(--b1));border-radius:4px"></div></div>'+
+        '<div style="color:'+(vested?'var(--green)':'var(--muted)')+'">'+(vested?'✓ Vested':pct.toFixed(0)+'% ('+days+' days)')+'</div>';
+      list.appendChild(row);
     }
-    container.style.display=hasClaimedAny?'block':'none';
+    container.style.display='block';
   }catch(e){console.error('loadClaimedPeriods',e);}
 }
 
